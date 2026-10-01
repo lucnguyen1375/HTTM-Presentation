@@ -1,0 +1,1017 @@
+
+% !TEX TS-program = xelatex
+% !TEX encoding = UTF-8 Unicode
+
+\documentclass[aspectratio=169, 10pt]{beamer}
+
+% --- Cấu hình Font & Tiếng Việt cho XeLaTeX ---
+\usepackage{fontspec}
+\usefonttheme{professionalfonts}
+\setmainfont{Times New Roman}
+\setsansfont{Times New Roman}
+
+\usepackage{polyglossia}
+\setdefaultlanguage{vietnamese}
+
+\usepackage{amsmath, amssymb}
+\usepackage{booktabs, colortbl, multirow}
+\usepackage{tikz}
+\usetikzlibrary{shapes, arrows.meta, positioning, calc, matrix, fit, backgrounds, decorations.pathreplacing}
+\usepackage{graphicx}
+
+\usetheme{Madrid}
+\usecolortheme{whale}
+\setbeamertemplate{navigation symbols}{}
+
+% Bảng màu thiết kế
+\definecolor{mainnavy}{RGB}{26, 54, 93}
+\definecolor{accentteal}{RGB}{13, 92, 117}
+\definecolor{teal}{RGB}{13, 92, 117}
+\definecolor{warmorange}{RGB}{217, 119, 6}
+\definecolor{crimsonred}{RGB}{220, 38, 38}
+\definecolor{emeraldgreen}{RGB}{5, 150, 105}
+\definecolor{slate}{RGB}{51, 65, 85}
+\definecolor{lightbg}{RGB}{248, 250, 252}
+\definecolor{boxblue}{RGB}{239, 246, 255}
+\definecolor{boxgreen}{RGB}{240, 253, 244}
+\definecolor{boxorange}{RGB}{255, 251, 235}
+\definecolor{boxred}{RGB}{254, 242, 242}
+
+\setbeamercolor{structure}{fg=mainnavy}
+\setbeamercolor{title}{bg=mainnavy, fg=white}
+\setbeamercolor{frametitle}{bg=mainnavy, fg=white}
+\setbeamercolor{block title}{bg=mainnavy, fg=white}
+\setbeamercolor{block body}{bg=lightbg, fg=slate}
+\setbeamercolor{block title example}{bg=accentteal, fg=white}
+\setbeamercolor{block body example}{bg=lightbg, fg=slate}
+\setbeamercolor{block title alerted}{bg=crimsonred, fg=white}
+\setbeamercolor{block body alerted}{bg=boxred, fg=slate}
+
+% Thanh chân trang chuẩn x / 24
+\setbeamertemplate{footline}{%
+  \leavevmode%
+  \hbox{%
+  \begin{beamercolorbox}[wd=.333333\paperwidth,ht=2.5ex,dp=1.1ex,center]{author in head/foot}%
+    \usebeamerfont{author in head/foot}Chuyên đề Học Sâu
+  \end{beamercolorbox}%
+  \begin{beamercolorbox}[wd=.333333\paperwidth,ht=2.5ex,dp=1.1ex,center]{title in head/foot}%
+    \usebeamerfont{title in head/foot}Mạng Nơ-ron Hồi quy (RNN)
+  \end{beamercolorbox}%
+  \begin{beamercolorbox}[wd=.333333\paperwidth,ht=2.5ex,dp=1.1ex,right]{date in head/foot}%
+    \usebeamerfont{date in head/foot}\insertframenumber{} / 26\hspace*{2.5ex}
+  \end{beamercolorbox}}%
+  \vskip0pt%
+}
+
+% Kiểu mũi tên TikZ
+\tikzset{
+  >=Stealth,
+  flowarrow/.style={-{Stealth[length=2.2mm, width=1.5mm]}, thick, mainnavy},
+  flowarrow_teal/.style={-{Stealth[length=2.2mm, width=1.5mm]}, thick, accentteal},
+  flowarrow_red/.style={-{Stealth[length=2.2mm, width=1.5mm]}, thick, crimsonred},
+  flowarrow_green/.style={-{Stealth[length=2.2mm, width=1.5mm]}, thick, emeraldgreen},
+  flowarrow_orange/.style={-{Stealth[length=2.2mm, width=1.5mm]}, thick, warmorange},
+  axisarrow/.style={-{Stealth[length=2.2mm, width=1.5mm]}, thick, mainnavy}
+}
+
+\title[Chuyên đề RNN]{MẠNG NƠ-RON HỒI QUY (RNN)}
+\subtitle{Từ Hạn Chế của MLP \& 1D-CNN đến Nguyên Lý Xử Lý Dữ Liệu Chuỗi có Trạng Thái Ẩn}
+\author{Nhóm thực hiện:\\Văn Thị Mai Linh \and Nguyễn Văn Minh Lực \and Giáp Minh Hiếu \and Nguyễn Nam Hải}
+\institute{Chuyên đề Học Sâu (Deep Learning)}
+\date{}
+
+\begin{document}
+
+% ---------------- SLIDE 1 ----------------
+\begin{frame}[plain]
+\titlepage
+\vspace{-0.6cm}
+\begin{center}
+\textit{\footnotesize "Feedforward nhìn thế giới qua từng bức ảnh rời rạc;\\RNN thấu hiểu dữ liệu qua dòng chảy liên tục của thời gian."}
+\end{center}
+\end{frame}
+
+% ---------------- SLIDE 2 ----------------
+\begin{frame}{Bản chất Dữ liệu dạng Chuỗi (Sequential Data)}
+\begin{block}{\textbf{Thứ tự xuất hiện quyết định hoàn toàn ngữ nghĩa của dữ liệu}}
+\begin{itemize}
+    \item \textbf{Đặc tính trật tự:} Mỗi điểm dữ liệu tại thời điểm \(t\) luôn mang mối tương quan mật thiết với các điểm quá khứ \(t-1, t-2, \dots\)
+    \item \textbf{Hai dạng chính:} Dữ liệu token rời rạc (Text, DNA) và dữ liệu chuỗi số liên tục (Giá vàng, cổ phiếu, nhịp tim).
+\end{itemize}
+\end{block}
+
+\vspace{0.3cm}
+\begin{columns}[T]
+\begin{column}{0.48\textwidth}
+\begin{exampleblock}{\textbf{Chuỗi Rời rạc (NLP / Văn bản)}}
+"Hà Nội không mưa" \(\neq\) "Mưa không Hà Nội"\\
+\vspace{0.2cm}
+\(\rightarrow\) \textit{Câu đầu có nghĩa rõ ràng, câu sau vô nghĩa hoặc biến đổi ngữ nghĩa.}
+\end{exampleblock}
+\end{column}
+\begin{column}{0.48\textwidth}
+\begin{alertblock}{\textbf{Chuỗi Liên tục (Time-Series)}}
+Giá vàng: \([ 82.5 \rightarrow 83.1 \rightarrow 84.0 \rightarrow 85.2 ]\) (Tăng)\\
+Giá vàng: \([ 85.2 \rightarrow 84.0 \rightarrow 83.1 \rightarrow 82.5 ]\) (Giảm)
+\end{alertblock}
+\end{column}
+\end{columns}
+\end{frame}
+
+% ---------------- SLIDE 3 ----------------
+\begin{frame}{Bài toán Dự đoán Phần tử Kế tiếp (Next Step Prediction)}
+\textbf{Mục tiêu:} Cho chuỗi quan sát quá khứ \(X = (x_1, x_2, \dots, x_t)\), dự đoán giá trị tương lai \(x_{t+1}\).
+\vspace{0.4cm}
+
+\begin{block}{\textbf{Bài toán 1: Next Word Prediction (NLP)}}
+Ngữ cảnh: \texttt{"We"} \(\rightarrow\) \texttt{"are"} \(\rightarrow\) \texttt{"learning"} \(\rightarrow\) \texttt{"AI"} \(\rightarrow\) \textbf{[ ? ]}\\
+\(\rightarrow\) Target kỳ vọng: \textbf{"is"}
+\end{block}
+
+\begin{exampleblock}{\textbf{Bài toán 2: Dự báo Chuỗi thời gian (Time-Series)}}
+Cửa sổ trượt (30 ngày lịch sử):\\
+\([ P(t-29), P(t-28), \dots , P(t-1), P(t) ] \rightarrow \textbf{[ P(t+1) ]}\)\\
+\(\rightarrow\) Dự báo biến động ngày 31.
+\end{exampleblock}
+\end{frame}
+
+% ---------------- SLIDE 4 ----------------
+\begin{frame}{Hai Pipeline Tiền xử lý Đặc trưng}
+\textit{Dữ liệu thô không thể đưa trực tiếp vào mạng mà phải đi qua pipeline chuẩn hóa:}
+\vspace{0.2cm}
+
+\begin{columns}[T]
+\begin{column}{0.48\textwidth}
+\begin{block}{\textbf{Văn bản (Text Pipeline)}}
+\small
+\begin{enumerate}
+    \item \textbf{Văn bản thô:} "giá vàng tăng"
+    \item \textbf{Tokenizer:} ["giá", "vàng", "tăng"]
+    \item \textbf{Vocab Index:} \([2, 3, 4]\)
+    \item \textbf{Padding:} \([2, 3, 4, 0, 0]\)
+    \item \textbf{Embedding:} Tensor \([\text{Batch}, \text{Seq\_Len}, d]\)
+\end{enumerate}
+\end{block}
+\end{column}
+
+\begin{column}{0.48\textwidth}
+\begin{exampleblock}{\textbf{Chuỗi số (Time-Series Pipeline)}}
+\small
+\begin{enumerate}
+    \item \textbf{File CSV thô:} Date, Price
+    \item \textbf{Làm sạch \& Chia tập:} Train 70\%, Val 15\%, Test 15\%
+    \item \textbf{Scaling:} log1p(Price) \(\rightarrow\) MinMax (chỉ fit trên Train)
+    \item \textbf{Windowing:} Cửa sổ trượt 30 ngày
+    \item \textbf{Đầu vào:} Tensor \([\text{N}, 30, 1]\)
+\end{enumerate}
+\end{exampleblock}
+\end{column}
+\end{columns}
+\end{frame}
+
+% ---------------- SLIDE 5 ----------------
+\begin{frame}{Tiếp cận bằng MLP \& Cơ chế Ghép phẳng (Flatten)}
+\textit{Mạng truyền thẳng (MLP) bắt buộc phải biến toàn bộ ngữ cảnh thành một vector phẳng duy nhất.}
+\vspace{0.2cm}
+
+\begin{center}
+\begin{tikzpicture}[node distance=0.3cm, scale=0.8, every node/.style={scale=0.8}]
+    \node[draw, rounded corners, fill=blue!10] (t1) {Token 1: \([ -0.18, 0.55, \dots ]\)};
+    \node[draw, rounded corners, fill=blue!10, below=of t1] (t2) {Token 2: \([ 0.22, 1.32, \dots ]\)};
+    \node[draw, rounded corners, fill=blue!10, below=of t2] (t3) {Token 3: \([ 0.43, -1.30, \dots ]\)};
+    \node[draw, rounded corners, fill=blue!10, below=of t3] (t4) {Token 4: \([ 1.02, -1.90, \dots ]\)};
+    \node[draw, rounded corners, fill=blue!10, below=of t4] (t5) {Token 5: \([ 1.78, -0.82, \dots ]\)};
+    
+    \node[draw, right=1.5cm of t3, fill=orange!20, minimum height=3cm, align=center] (concat) {Ép phẳng\\(Concatenate)\\ \(\rightarrow 1 \times 20\)};
+    
+    \draw[->, thick] (t1.east) -- (concat.west);
+    \draw[->, thick] (t2.east) -- (concat.west);
+    \draw[->, thick] (t3.east) -- (concat.west);
+    \draw[->, thick] (t4.east) -- (concat.west);
+    \draw[->, thick] (t5.east) -- (concat.west);
+    
+    \node[draw, right=1.5cm of concat, fill=green!20, align=center] (mlp) {Linear (20 \(\rightarrow\) 16)\\ ReLU \\ Linear (16 \(\rightarrow\) 8)};
+    \draw[->, thick] (concat.east) -- (mlp.west);
+    
+    \node[draw, right=1.5cm of mlp, fill=red!20] (out) {Softmax \(\rightarrow\) "is"};
+    \draw[->, thick] (mlp.east) -- (out.west);
+\end{tikzpicture}
+\end{center}
+\end{frame}
+
+% ---------------- SLIDE 6 ----------------
+\begin{frame}{Ba Điểm nghẽn Bản chất của MLP}
+\begin{alertblock}{\textbf{1. Cửa sổ cố định (Fixed Window)}}
+Ma trận W gắn cứng với kích thước cố định L.
+\begin{itemize}
+    \item Câu ngắn: Bắt buộc nhồi padding dư thừa.
+    \item Câu dài hơn L: Cắt cụt, mất hoàn toàn dữ liệu.
+\end{itemize}
+\end{alertblock}
+
+\begin{alertblock}{\textbf{2. Mất tính tuần tự (Non-sequential)}}
+Ép phẳng làm mất trục thời gian. Mạng xem từ ở vị trí 1 và từ ở vị trí 5 là hai tọa độ độc lập, không nhận diện được quy luật dịch chuyển.
+\end{alertblock}
+
+\begin{alertblock}{\textbf{3. Bùng nổ tham số (Parameter Explosion)}}
+Số tham số tầng Linear = \(W_1 \times (L \times d)\). Độ dài ngữ cảnh tăng gấp đôi khiến trọng số tăng gấp đôi, dễ gây quá khớp (overfitting) và tốn bộ nhớ.
+\end{alertblock}
+\end{frame}
+
+% ---------------- SLIDE 7 ----------------
+\begin{frame}{Bước tiến 1D-CNN: Cửa sổ Trượt Kernel (N-gram)}
+\textit{1D-CNN khắc phục việc gắn cứng vị trí bằng cách dùng Kernel trượt qua từng bước thời gian:}
+
+\begin{center}
+\begin{tikzpicture}[scale=0.85, every node/.style={scale=0.85}]
+    \matrix[matrix of nodes, nodes={draw, minimum width=2.5cm, minimum height=0.6cm, fill=blue!10}, row sep=0.1cm] (input) {
+        "We" \\
+        "are" \\
+        "learning" \\
+        "AI" \\
+        "[PAD]" \\
+    };
+    
+    \node[draw, right=3cm of input-1-1, fill=orange!20, minimum width=3cm, minimum height=1.3cm, align=center, yshift=-0.35cm] (kernel) {Kernel \(k=2\)\\ Trượt từng bước};
+    
+    \draw[->, dashed, thick, color=gray] (input-1-1.east) -- (kernel.west);
+    \draw[->, dashed, thick, color=gray] (input-2-1.east) -- (kernel.west);
+    
+    \node[right=2.5cm of kernel] (out) {
+        \begin{tabular}{c}
+        Feature Map \\
+        \(c_1 = 1.81\) \\
+        \(c_2 = 0.62\) \\
+        \(c_3 = -0.16\) \\
+        \(c_4 = 1.47\) 
+        \end{tabular}
+    };
+    \draw[->, thick] (kernel.east) -- (out.west);
+    
+    \node[below=1cm of out, draw, fill=green!20] (pool) {Max-Pooling \(\rightarrow v = 1.81\)};
+    \draw[->, thick] (out.south) -- (pool.north);
+\end{tikzpicture}
+\end{center}
+\end{frame}
+
+% ---------------- SLIDE 8 ----------------
+\begin{frame}{Vì sao 1D-CNN vẫn chưa tối ưu cho chuỗi dài?}
+\begin{alertblock}{\textbf{Vấn đề 1: Tầm nhìn bị bó hẹp (Limited Receptive Field)}}
+Kernel (\(k=2\)) chỉ bắt được từng cặp từ đứng cạnh nhau (Bigram). Không thể liên kết chủ ngữ ở đầu câu với vị ngữ ở cuối một đoạn văn dài.
+\end{alertblock}
+
+\vspace{0.4cm}
+\begin{alertblock}{\textbf{Vấn đề 2: Max-Pooling xóa bỏ thứ tự thời gian}}
+\begin{itemize}
+    \item \(c_1\) ("We are") = $1.81$
+    \item \(c_2\) ("are learning") = $0.62$
+    \item \(c_3\) ("learning AI") = $0.00$
+    \item \(c_4\) ("AI [PAD]") = $1.47$
+\end{itemize}
+Max-Pooling lấy giá trị lớn nhất là $1.81$, nhưng \textbf{hoàn toàn quên} $1.81$ xuất hiện ở đầu hay cuối câu!
+\end{alertblock}
+\end{frame}
+
+% ---------------- SLIDE 9 ----------------
+\begin{frame}{Bảng So sánh: MLP vs. 1D-CNN vs. RNN}
+\begin{table}
+\centering
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{>{\bfseries}l p{4cm} p{4cm} p{4.5cm}}
+\toprule
+Tiêu chí đối sánh & MLP (Feedforward) & 1D-CNN (Convolutional) & Recurrent Neural Network (RNN) \\
+\midrule
+Độ dài ngữ cảnh & Cố định cứng, phải đệm padding & Cửa sổ trượt cố định theo \(k\) & \textcolor{accentteal}{\textbf{Co giãn linh hoạt theo độ dài chuỗi}} \\
+\addlinespace
+Bảo toàn thứ tự & Bị xóa sạch sau phép Flatten & Giữ được trật tự cục bộ N-gram & \textcolor{accentteal}{\textbf{Duy trì trật tự toàn vẹn theo thời gian}} \\
+\addlinespace
+Chia sẻ trọng số & Không chia sẻ (Độc lập vị trí) & Chia sẻ trọng số theo không gian & \textcolor{accentteal}{\textbf{Chia sẻ trọng số xuyên suốt thời gian}} \\
+\addlinespace
+Bộ nhớ tích lũy & Không có bộ nhớ & Gián tiếp qua độ sâu filter & \textcolor{accentteal}{\textbf{Bộ nhớ trạng thái ẩn (\(h_t\)) trực tiếp}} \\
+\addlinespace
+Tăng trưởng tham số & Tăng vọt theo độ dài \((L \cdot d)\) & Phụ thuộc số filter, độc lập \(L\) & \textcolor{accentteal}{\textbf{Hằng số, hoàn toàn không phụ thuộc \(L\)}} \\
+\bottomrule
+\end{tabular}%
+}
+\end{table}
+\end{frame}
+
+% ---------------- SLIDE 10 ----------------
+\begin{frame}{Ý tưởng Cốt lõi của RNN: Trạng thái Ẩn (\(h_t\))}
+{\small\textbf{Trực giác:} Con người không bắt đầu tư duy lại từ đầu ở từng chữ, mà liên tục duy trì một dòng ý thức \textbf{nén dần thông tin quá khứ}.}
+
+\vspace{0.1cm}
+\begin{columns}[T]
+% ---- Cột trái: sơ đồ đệ quy + ví dụ "Tôi đang học" ----
+\begin{column}{0.46\textwidth}
+\begin{center}
+\begin{tikzpicture}[auto, thick, scale=0.74, every node/.style={scale=0.74}]
+    \node (x1) [align=center] {\(t=1\) \\ "Tôi"};
+    \node (x2) [right=1.0cm of x1, align=center] {\(t=2\) \\ "đang"};
+    \node (x3) [right=1.0cm of x2, align=center] {\(t=3\) \\ "học"};
+
+    \node (rnn1) [draw, fill=blue!10, rounded corners, below=0.7cm of x1, minimum width=1.2cm, minimum height=0.9cm] {RNN};
+    \node (rnn2) [draw, fill=blue!10, rounded corners, below=0.7cm of x2, minimum width=1.2cm, minimum height=0.9cm] {RNN};
+    \node (rnn3) [draw, fill=blue!10, rounded corners, below=0.7cm of x3, minimum width=1.2cm, minimum height=0.9cm] {RNN};
+
+    \node (h0) [draw, fill=gray!20, rounded corners, below left=0.5cm and 0.25cm of rnn1] {\(h_0 = 0\)};
+
+    \draw[flowarrow] (x1) -- (rnn1);
+    \draw[flowarrow] (x2) -- (rnn2);
+    \draw[flowarrow] (x3) -- (rnn3);
+
+    \draw[flowarrow] (h0) -- (rnn1);
+    \draw[flowarrow] (rnn1) -- (rnn2) node[midway, above] {\(h_1\)};
+    \draw[flowarrow] (rnn2) -- (rnn3) node[midway, above] {\(h_2\)};
+    \draw[flowarrow] (rnn3) -- ++(0.9,0) node[midway, above] {\(h_3\)};
+
+    \begin{scope}[on background layer]
+        \node[draw=crimsonred, dashed, rounded corners, fit=(rnn1) (rnn2) (rnn3), inner sep=4pt] (fitbox) {};
+    \end{scope}
+    \node[below=2pt of fitbox, text=crimsonred, font=\scriptsize\bfseries, align=center] {CÙNG MỘT Ô RNN\\(chung tham số \(\theta\))};
+\end{tikzpicture}
+\end{center}
+\vspace{-0.05cm}
+{\footnotesize
+\textbf{\(h_t\) = "trí nhớ" nén toàn bộ quá khứ:}
+\begin{itemize}\itemsep1pt
+    \item \(h_1\): chỉ nhớ "Tôi"
+    \item \(h_2\): nhớ "Tôi" + "đang"
+    \item \(h_3\): nhớ trọn câu "Tôi đang học"
+\end{itemize}}
+\end{column}
+% ---- Cột phải: lý thuyết đệ quy ----
+\begin{column}{0.52\textwidth}
+\begin{exampleblock}{\textbf{Phương trình đệ quy của RNN}}
+Mỗi bước chỉ cần \textbf{trạng thái liền trước} \(h_{t-1}\) và \textbf{đầu vào hiện tại} \(x_t\):
+\[
+    h_t = f_\theta\!\left(h_{t-1},\, x_t\right)
+\]
+\end{exampleblock}
+\vspace{-0.05cm}
+{\footnotesize
+\begin{itemize}\itemsep2pt
+    \item \textbf{Tóm tắt lịch sử vô hạn:} \(h_{t-1}\) đã chứa cả chuỗi quá khứ \(x_1, \ldots, x_{t-1}\), nên quá khứ dài bao nhiêu cũng được nén vào vector \textbf{cố định \(d_h\) chiều}.
+    \item \textbf{Cập nhật từng bước \(O(1)\):} mỗi token đến chỉ cần \textbf{một} phép cập nhật; xử lý kiểu streaming, không phải lưu toàn chuỗi trong bộ nhớ.
+    \item \textbf{Khác MLP cửa sổ trượt:} MLP phải thấy đủ \(L\) phần tử trong cửa sổ; RNN duy trì "tóm tắt động" \(h_t\) \textbf{không phụ thuộc độ dài} chuỗi.
+\end{itemize}}
+\end{column}
+\end{columns}
+\end{frame}
+
+% ---------------- SLIDE 11 ----------------
+\begin{frame}{Công thức Toán học -- Quá trình Forward}
+\small
+{\footnotesize Ba phương trình forward tại bước \(t\), với \(x_t \in \mathbb{R}^{d_x}\) (đầu vào), \(h_t \in \mathbb{R}^{d_h}\) (trạng thái ẩn), \(\hat{y}_t \in \mathbb{R}^{d_y}\) (dự đoán):}
+\vspace{-0.15cm}
+\setlength{\abovedisplayskip}{3pt}
+\setlength{\belowdisplayskip}{3pt}
+\setlength{\jot}{1pt}
+\begin{align*}
+    a_t &= \mathbf{W} x_t + \mathbf{U} h_{t-1} + b_h
+    && \text{\footnotesize tổng nhập: ghép tin mới với trí nhớ cũ} \\
+    h_t &= \tanh(a_t)
+    && \text{\footnotesize trạng thái ẩn mới, truyền sang bước \(t+1\)} \\
+    \hat{y}_t &= \mathbf{V} h_t + b_y
+    && \text{\footnotesize đọc bộ nhớ \(h_t\) để đưa ra dự đoán}
+\end{align*}
+\vspace{-0.2cm}
+\begin{columns}[T]
+\begin{column}{0.54\textwidth}
+\centering
+\footnotesize
+\setlength{\tabcolsep}{4pt}
+\begin{tabular}{@{}clll@{}}
+\toprule
+\textbf{Tham số} & \textbf{Kích thước} & \textbf{Kết nối} & \textbf{Vai trò} \\
+\midrule
+\(\mathbf{W}\) & \(d_h \times d_x\) & Vào \(\rightarrow\) Ẩn & Đọc tin mới \(x_t\) \\
+\addlinespace[2pt]
+\(\mathbf{U}\) & \(d_h \times d_h\) & Ẩn \(\rightarrow\) Ẩn & Giữ trí nhớ \(h_{t-1}\) \\
+\addlinespace[2pt]
+\(\mathbf{V}\) & \(d_y \times d_h\) & Ẩn \(\rightarrow\) Ra & Đọc ra kết quả \\
+\addlinespace[2pt]
+\(b_h,\ b_y\) & \(d_h,\ d_y\) & Bias & Dịch ngưỡng \\
+\bottomrule
+\end{tabular}
+\end{column}
+\begin{column}{0.43\textwidth}
+\centering
+\begin{tikzpicture}[thick, scale=0.78, every node/.style={scale=0.78}]
+    \node (hprev) [draw, rounded corners, fill=gray!20, minimum width=1.4cm] {\(h_{t-1}\)};
+    \node (xt) [draw, rounded corners, fill=green!20, minimum width=1.4cm, below=0.45cm of hprev] {\(x_t\)};
+    \node (ht) [draw, rounded corners, fill=blue!20, minimum width=1.6cm, right=1.2cm of hprev, yshift=-0.55cm] {\(h_t\)};
+    \node (yt) [draw, rounded corners, fill=orange!20, minimum width=1.5cm, right=1.0cm of ht] {\(\hat{y}_t\)};
+    \draw[flowarrow] (hprev.east) -- (ht.north west) node[pos=0.45, above left] {\(\mathbf{U}\)};
+    \draw[flowarrow_green] (xt.east) -- (ht.south west) node[pos=0.45, below left] {\(\mathbf{W}\)};
+    \draw[flowarrow_orange] (ht.east) -- (yt.west) node[midway, above] {\(\mathbf{V}\)};
+    \node[below=0.03cm of hprev, font=\scriptsize, text=slate] {trí nhớ cũ};
+    \node[below=0.03cm of xt, font=\scriptsize, text=slate] {tin mới};
+    \node[below=0.03cm of ht, font=\scriptsize, text=slate] {bộ nhớ mới};
+    \node[below=0.03cm of yt, font=\scriptsize, text=slate] {dự đoán};
+\end{tikzpicture}
+\end{column}
+\end{columns}
+\vspace{-0.05cm}
+\footnotesize
+\begin{itemize}\itemsep2pt
+    \item \textbf{Vì sao hàm \(\tanh\)?} Tâm \(0\), chặn \((-1,1)\) nên chuẩn của \(h_t\) ổn định qua các bước, đạo hàm \(1-\tanh^2(a_t)\) gọn; \textit{sigmoid} lệch dương (trung bình \(1/2\)), đạo hàm \(\leq 0.25\) làm gradient tắt nhanh; \textit{ReLU} không chặn trên, trạng thái cộng dồn dễ bùng nổ.
+    \item \textbf{Tên PyTorch tương ứng:} \(\mathbf{W}\) = \texttt{weight\_ih\_l0}, \(\mathbf{U}\) = \texttt{weight\_hh\_l0} (Keras: \texttt{kernel}, \texttt{recurrent\_kernel}); mất mát tổng theo thời gian \(L = \sum_{t=1}^{T} \ell(\hat{y}_t, y_t)\) (MSE cho hồi quy).
+\end{itemize}
+\end{frame}
+
+% ---------------- SLIDE 12 ----------------
+\begin{frame}{Ví dụ Tính Toán Forward Từng Bước (số cụ thể)}
+
+% Thiết lập số: lấy nguyên từ tài liệu đã kiểm chứng numpy + PyTorch
+\begin{center}
+\small
+$d_x = 2$, $\;d_h = 2$, $\;d_y = 1$;\quad
+$W = \begin{pmatrix} 0.5 & 0.2 \\ -0.1 & 0.4 \end{pmatrix}$,\;
+$U = \begin{pmatrix} 0.3 & 0.0 \\ 0.2 & 0.5 \end{pmatrix}$,\;
+$V = \begin{pmatrix} 1.0 & -1.0 \end{pmatrix}$,\\[3pt]
+$\mathbf{x}_1 = \begin{pmatrix} 1 \\ 0 \end{pmatrix}$,\;
+$\mathbf{h}_0 = \begin{pmatrix} 0 \\ 0 \end{pmatrix}$,\;
+$\mathbf{b}_h = \mathbf{0}$,\; $b_y = 0.1$
+\end{center}
+
+\vspace{0.1cm}
+\begin{center}
+\small
+\setlength{\tabcolsep}{5pt}
+\renewcommand{\arraystretch}{1.15}
+\begin{tabular}{@{}clll@{}}
+\toprule
+\textbf{Bước} & \textbf{Phép tính} & \textbf{Ý nghĩa} & \textbf{Kết quả ($t = 1$)} \\
+\midrule
+1 & $W \cdot \mathbf{x}_1$ & Đọc tin mới & $(+0.500,\; -0.100)$ \\
+2 & $U \cdot \mathbf{h}_0$ & Chưa có ký ức (trang trắng) & $(+0.000,\; +0.000)$ \\
+\rowcolor{lightbg}
+3 & $\mathbf{h}_1 = \tanh(W \cdot \mathbf{x}_1 + U \cdot \mathbf{h}_0 + \mathbf{b}_h)$ & Ký ức mới (vector) & \textcolor{accentteal}{$(+0.462,\; -0.100)$} \\
+4 & $\hat{y}_1 = V \cdot \mathbf{h}_1 + b_y$ & Đầu ra (số) & \textcolor{warmorange}{$+0.662$} \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\vspace{0.1cm}
+\textbf{Bước $t = 2$: lặp nguyên hệ thống.} Thay $\mathbf{x}_2 = (0,\, 1)$, lấy $\mathbf{h}_1$ vừa tính làm \emph{trí nhớ cũ} (lúc này $U \cdot \mathbf{h}_1 \neq \mathbf{0}$: thành phần hồi quy xuất hiện lần đầu); bộ trọng số $(W, U, V)$ giữ nguyên tuyệt đối, chạy dần đến $t = T$.
+
+\vspace{0.15cm}
+\begin{center}
+\small
+\textbf{Shape flow:}\; $\mathbf{x} \in \mathbb{R}^{T \times d_x} \;\longrightarrow\; \mathbf{h} \in \mathbb{R}^{T \times d_h} \;\longrightarrow\; \hat{\mathbf{y}} \in \mathbb{R}^{T \times d_y}$\\[3pt]
+{\footnotesize \textcolor{slate}{\textit{Ghi chú: PyTorch \texttt{nn.RNN(2,\,2)} + \texttt{nn.Linear(2,\,1)} nạp đúng $W$, $U$, $V$, đặt 2 bias của \texttt{nn.RNN} về 0 và bias \texttt{Linear} $= 0.1$ thì chạy đúng ví dụ (sai số $< 10^{-6}$).}}}
+\end{center}
+
+\end{frame}
+
+% ---------------- SLIDE 13 ----------------
+\begin{frame}{Nguyên lý Chia sẻ Trọng số (Weight Sharing)}
+\footnotesize
+\textit{Chuỗi dài 5 bước hay 5.000 bước, RNN đều \textbf{dùng chung một bộ ma trận} \(\mathbf{W}, \mathbf{U}, \mathbf{V}\) duy nhất:}
+
+\vspace{0.05cm}
+\begin{center}
+\begin{tabular}{ll}
+Thời điểm \(t=1\): & \(h_1 = \tanh( \mathbf{W} \cdot x_1 + \mathbf{U} \cdot h_0 + b_h ) \rightarrow y_1 = \mathbf{V} \cdot h_1\) \\
+Thời điểm \(t=2\): & \(h_2 = \tanh( \mathbf{W} \cdot x_2 + \mathbf{U} \cdot h_1 + b_h ) \rightarrow y_2 = \mathbf{V} \cdot h_2\) \\
+\multicolumn{2}{c}{\(\vdots \quad \text{áp dụng cùng một bộ } \mathbf{W}, \mathbf{U}, \mathbf{V} \text{ tới } t = T\)} \\
+\end{tabular}
+\end{center}
+
+\vspace{0.05cm}
+\begin{columns}[T]
+\begin{column}{0.57\textwidth}
+\begin{block}{\textbf{Tổng số tham số \(P\) — không chứa \(T\)}}
+{\small
+\[
+P = \underbrace{d_h \cdot d_x}_{\mathbf{W}} + \underbrace{d_h^2}_{\mathbf{U}} + \underbrace{d_y \cdot d_h}_{\mathbf{V}} + \underbrace{d_h}_{b_h} + \underbrace{d_y}_{b_y}
+\]}
+Ví dụ \(d_x = 2,\ d_h = 64,\ d_y = 1\): \(P = 128 + 4096 + 64 + 64 + 1 = 4353\) tham số cho \textbf{mọi độ dài chuỗi}.
+\end{block}
+\end{column}
+\begin{column}{0.41\textwidth}
+\begin{alertblock}{\textbf{So với MLP cửa sổ \(L=30\)}}
+{\scriptsize
+\begin{itemize}\itemsep1pt
+    \item \textbf{MLP} (\(d_x=2\), 64 nơ-ron ẩn): trọng số tầng đầu \(= 30 \cdot 2 \cdot 64 = 3840\) (+64 bias), chỉ dùng cho \textbf{một} độ rộng cửa sổ 30.
+    \item \textbf{RNN:} \(\mathbf{W} = 2 \cdot 64 = 128\) tham số nhưng \textbf{tái sử dụng 30 lần}.
+\end{itemize}}
+\end{alertblock}
+\end{column}
+\end{columns}
+
+\vspace{0.05cm}
+\begin{exampleblock}{\textbf{Bốn lợi ích cốt lõi}}
+{\scriptsize
+\begin{itemize}\itemsep1pt
+    \item \textbf{Tham số hằng số theo \(T\)} — chuỗi dài bao nhiêu cũng không tăng thêm tham số.
+    \item \textbf{Tổng quát hóa:} mẫu hình xuất hiện ở đầu hay cuối chuỗi đều được nhận diện giống nhau.
+    \item \textbf{Tự điều chuẩn hóa:} ít tham số hơn trên cùng dữ liệu \(\rightarrow\) kháng quá khớp tốt hơn.
+    \item \textbf{Analogy CNN:} kernel CNN chia sẻ trọng số theo \textbf{KHÔNG GIAN}, RNN chia sẻ theo \textbf{THỜI GIAN}.
+\end{itemize}}
+\end{exampleblock}
+\end{frame}
+
+% ---------------- SLIDE 14 ----------------
+\begin{frame}{Đồ thị Tính toán dạng Mở cuộn (Unfolded Computation Graph)}
+Một ô RNN hồi quy khi mở cuộn trở thành một \textbf{mạng truyền thẳng cực sâu} có độ sâu đúng bằng \(T\):
+
+\vspace{0.2cm}
+\begin{columns}[c]
+\begin{column}{0.22\textwidth}
+\centering
+{\small \textbf{DẠNG CUỘN} (Folded)}\\[2mm]
+\begin{tikzpicture}[thick]
+    \node (x) {\(x_t\)};
+    \node (h) [draw=mainnavy, fill=teal!15, rounded corners, minimum size=0.72cm, above=0.55cm of x] {\(h_t\)};
+    \node (y) [above=0.55cm of h] {\(y_t\)};
+    \draw[flowarrow_teal] (x) -- (h) node[midway, right] {\(W\)};
+    \draw[flowarrow] (h) -- (y) node[midway, right] {\(V\)};
+    \draw[flowarrow_red] (h.east) arc(-90:200:0.35cm) node[above right] {\(U\)};
+\end{tikzpicture}
+\end{column}
+
+\begin{column}{0.04\textwidth}
+\centering
+\(\longrightarrow\)
+\end{column}
+
+\begin{column}{0.64\textwidth}
+\centering
+{\small \textbf{DẠNG MỞ CUỘN} (Unfolded)}\\[2mm]
+\begin{tikzpicture}[thick, scale=0.80, every node/.style={scale=0.80},
+    hnode/.style={draw=mainnavy, fill=teal!15, rounded corners, minimum size=0.62cm}]
+    % Lớp đầu vào x
+    \node (x1) {\(x_1\)};
+    \node (x2) [right=0.7cm of x1] {\(x_2\)};
+    \node (x3) [right=0.7cm of x2] {\(x_3\)};
+    \node (xd) [right=0.45cm of x3] {\(\cdots\)};
+    \node (xT) [right=0.45cm of xd] {\(x_T\)};
+    % Trạng thái ẩn h (cùng một ô dùng chung)
+    \node (h1) [hnode, above=0.55cm of x1] {\(h_1\)};
+    \node (h2) [hnode, above=0.55cm of x2] {\(h_2\)};
+    \node (h3) [hnode, above=0.55cm of x3] {\(h_3\)};
+    \node (hd) [right=0.45cm of h3] {\(\cdots\)};
+    \node (hT) [hnode, above=0.55cm of xT] {\(h_T\)};
+    \node (h0) [draw=slate, dashed, fill=gray!12, rounded corners, minimum size=0.62cm, left=0.5cm of h1] {\(h_0 = \mathbf{0}\)};
+    % Lớp đầu ra y
+    \node (y1) [above=0.5cm of h1] {\(y_1\)};
+    \node (y2) [above=0.5cm of h2] {\(y_2\)};
+    \node (y3) [above=0.5cm of h3] {\(y_3\)};
+    \node (yd) [right=0.45cm of y3] {\(\cdots\)};
+    \node (yT) [above=0.5cm of hT] {\(y_T\)};
+    % Cạnh x -> h : trọng số W
+    \draw[flowarrow_teal] (x1) -- (h1) node[midway, right] {\(W\)};
+    \draw[flowarrow_teal] (x2) -- (h2) node[midway, right] {\(W\)};
+    \draw[flowarrow_teal] (x3) -- (h3) node[midway, right] {\(W\)};
+    \draw[flowarrow_teal] (xT) -- (hT) node[midway, right] {\(W\)};
+    % Cạnh h -> h : trọng số U (đường trí nhớ)
+    \draw[flowarrow_red] (h0) -- (h1) node[midway, above] {\(U\)};
+    \draw[flowarrow_red] (h1) -- (h2) node[midway, above] {\(U\)};
+    \draw[flowarrow_red] (h2) -- (h3) node[midway, above] {\(U\)};
+    \draw[flowarrow_red, dashed] (h3) -- (hd);
+    \draw[flowarrow_red, dashed] (hd) -- (hT) node[midway, above] {\(U\)};
+    % Cạnh h -> y : trọng số V
+    \draw[flowarrow] (h1) -- (y1) node[midway, right] {\(V\)};
+    \draw[flowarrow] (h2) -- (y2) node[midway, right] {\(V\)};
+    \draw[flowarrow] (h3) -- (y3) node[midway, right] {\(V\)};
+    \draw[flowarrow] (hT) -- (yT) node[midway, right] {\(V\)};
+    % Ghi chú cùng một ô
+    \node[below=0.12cm of x2, text=emeraldgreen, font=\footnotesize\bfseries] (ghichu) {CÙNG MỘT Ô};
+    \node[below=0.0cm of ghichu.south, text=slate, font=\footnotesize] {— dùng chung \(W,\ U,\ V\) mọi thời điểm};
+\end{tikzpicture}
+\end{column}
+\end{columns}
+
+\vspace{0.2cm}
+\begin{columns}[T]
+\begin{column}{0.325\textwidth}
+\begin{block}{\textbf{Mở cuộn = Mạng sâu \(T\) tầng}}
+{\small Truyền thẳng \textbf{cực sâu}, độ sâu đúng bằng \(T\) \(\rightarrow\) \textbf{BPTT} chính là backprop chạy trên đúng đồ thị này.}
+\end{block}
+\end{column}
+\begin{column}{0.325\textwidth}
+\begin{alertblock}{\textbf{\(\mathbf{U}\) = Đường trí nhớ}}
+{\small Cạnh ngang \(h_{t-1} \rightarrow h_t\) (màu đỏ) đưa quá khứ vào hiện tại; \textbf{cắt nó} thì mất hết thông tin quá khứ.}
+\end{alertblock}
+\end{column}
+\begin{column}{0.325\textwidth}
+\begin{exampleblock}{\textbf{\(T\) giãn mãi — tham số cố định}}
+{\small Cùng bộ \(W, U, V\) tái sử dụng \(\rightarrow\) đồ thị dài thêm bao nhiêu cũng \textbf{không thêm trọng số} nào.}
+\end{exampleblock}
+\end{column}
+\end{columns}
+\end{frame}
+
+% ---------------- SLIDE 15 ----------------
+\begin{frame}{Các Dạng Kiến trúc Tương tác Chuỗi (Phần 1)}
+\small Tùy số lượng bước vào / bước ra, một ô RNN tạo thành các kiến trúc tương tác chuỗi khác nhau:
+
+\vspace{0.1cm}
+\begin{columns}[T]
+% ----- (a) One-to-One -----
+\begin{column}{0.30\textwidth}
+\begin{center}
+\textbf{One-to-One}\\
+\footnotesize 1 bước vào \(\rightarrow\) 1 bước ra
+
+\vspace{0.22cm}
+\begin{tikzpicture}[thick]
+    \node (y) {\(y\)};
+    \node (rnn) [draw, fill=blue!10, rounded corners, minimum size=0.6cm, below=0.5cm of y] {\scriptsize RNN};
+    \node (x) [below=0.5cm of rnn] {\(x\)};
+
+    \draw[flowarrow] (x) -- (rnn);
+    \draw[flowarrow] (rnn) -- (y);
+\end{tikzpicture}
+
+\vspace{0.3cm}
+\footnotesize \textit{Phân loại 1 ảnh — mốc đối chiếu, chưa khai thác ngữ cảnh chuỗi}
+\end{center}
+\end{column}
+% ----- (b) One-to-Many -----
+\begin{column}{0.33\textwidth}
+\begin{center}
+\textbf{One-to-Many}\\
+\footnotesize 1 bước vào \(\rightarrow\) chuỗi ra
+
+\vspace{0.3cm}
+\begin{tikzpicture}[thick]
+    \node (y1) {\(y_1\)};
+    \node (y2) [right=0.45cm of y1] {\(y_2\)};
+    \node (y3) [right=0.45cm of y2] {\(y_3\)};
+    \node (rnn) [draw, fill=blue!10, rounded corners, minimum size=0.6cm, below=0.5cm of y2] {\scriptsize RNN};
+    \node (x) [below=0.5cm of rnn] {\(x\) (1 vector)};
+
+    \draw[flowarrow] (x) -- (rnn);
+    \draw[flowarrow] (rnn) -- (y1);
+    \draw[flowarrow] (rnn) -- (y2);
+    \draw[flowarrow] (rnn) -- (y3);
+\end{tikzpicture}
+
+\vspace{0.3cm}
+\footnotesize \textit{Sinh chú thích ảnh (image captioning), sinh nhạc}
+\end{center}
+\end{column}
+% ----- (c) Many-to-One -----
+\begin{column}{0.33\textwidth}
+\begin{center}
+\textbf{Many-to-One}\\
+\footnotesize chuỗi vào \(\rightarrow\) 1 đầu ra
+
+\vspace{0.3cm}
+\begin{tikzpicture}[thick]
+    \node (y) {\(y\)};
+    \node (rnn) [draw, fill=blue!10, rounded corners, minimum size=0.6cm, below=0.5cm of y] {\scriptsize RNN};
+    \node (x2) [below=0.5cm of rnn] {\(x_2\)};
+    \node (x1) [left=0.45cm of x2] {\(x_1\)};
+    \node (x3) [right=0.45cm of x2] {\(x_3\)};
+
+    \draw[flowarrow] (x1) -- (rnn);
+    \draw[flowarrow] (x2) -- (rnn);
+    \draw[flowarrow] (x3) -- (rnn);
+    \draw[flowarrow] (rnn) -- (y);
+\end{tikzpicture}
+
+\vspace{0.3cm}
+\footnotesize \textit{Phân loại cảm xúc review; \textcolor{emeraldgreen}{dự báo giá ngày mai — dạng dùng trong phần thực nghiệm của bài}}
+\end{center}
+\end{column}
+\end{columns}
+\end{frame}
+
+% ---------------- SLIDE 16 ----------------
+\begin{frame}{Các Dạng Kiến trúc Tương tác Chuỗi (Phần 2)}
+\begin{columns}[T]
+% ----- (a) Many-to-Many đồng bộ -----
+\begin{column}{0.32\textwidth}
+\begin{center}
+\textbf{Many-to-Many (Đồng bộ)}\\
+\footnotesize mỗi bước vào \(\rightarrow\) 1 nhãn ra
+
+\vspace{0.25cm}
+\begin{tikzpicture}[thick]
+    \node (y1) {\(y_1\)};
+    \node (y2) [right=0.55cm of y1] {\(y_2\)};
+    \node (y3) [right=0.55cm of y2] {\(y_3\)};
+    \node (h1) [draw, fill=blue!10, rounded corners, minimum size=0.5cm, below=0.4cm of y1] {\scriptsize RNN};
+    \node (h2) [draw, fill=blue!10, rounded corners, minimum size=0.5cm, below=0.4cm of y2] {\scriptsize RNN};
+    \node (h3) [draw, fill=blue!10, rounded corners, minimum size=0.5cm, below=0.4cm of y3] {\scriptsize RNN};
+    \node (x1) [below=0.4cm of h1] {\(x_1\)};
+    \node (x2) [below=0.4cm of h2] {\(x_2\)};
+    \node (x3) [below=0.4cm of h3] {\(x_3\)};
+
+    \draw[flowarrow] (x1) -- (h1);
+    \draw[flowarrow] (x2) -- (h2);
+    \draw[flowarrow] (x3) -- (h3);
+    \draw[flowarrow] (h1) -- (y1);
+    \draw[flowarrow] (h2) -- (y2);
+    \draw[flowarrow] (h3) -- (y3);
+    \draw[flowarrow] (h1) -- (h2);
+    \draw[flowarrow] (h2) -- (h3);
+\end{tikzpicture}
+
+\vspace{0.25cm}
+\footnotesize \textit{Gán nhãn từ loại POS / NER: mỗi token ra đúng 1 nhãn}
+\end{center}
+\end{column}
+% ----- (b) Seq2Seq Encoder-Decoder -----
+\begin{column}{0.34\textwidth}
+\begin{center}
+\textbf{Seq2Seq (Encoder--Decoder)}\\
+\footnotesize độ dài ra \(\neq\) độ dài vào
+
+\vspace{0.25cm}
+\begin{tikzpicture}[thick]
+    \node (y1) {\(y_1\)};
+    \node (y2) [right=0.4cm of y1] {\(y_2\)};
+    \node (y3) [right=0.4cm of y2] {\(y_3\)};
+    \node (dec) [draw, fill=teal!15, rounded corners, minimum height=0.5cm, below=0.45cm of y2] {\scriptsize DECODER};
+    \node (enc) [draw, fill=blue!10, rounded corners, minimum height=0.5cm, below=0.55cm of dec] {\scriptsize ENCODER};
+    \node (x2) [below=0.45cm of enc] {\(x_2\)};
+    \node (x1) [left=0.4cm of x2] {\(x_1\)};
+
+    \draw[flowarrow] (x1) -- (enc);
+    \draw[flowarrow] (x2) -- (enc);
+    \draw[flowarrow] (enc) -- node[midway, right] {\scriptsize \(c\)} (dec);
+    \draw[flowarrow] (dec) -- (y1);
+    \draw[flowarrow] (dec) -- (y2);
+    \draw[flowarrow] (dec) -- (y3);
+\end{tikzpicture}
+
+\vspace{0.25cm}
+\footnotesize \textit{Encoder nén chuỗi vào thành vector ngữ cảnh \(c\); Decoder sinh chuỗi ra: dịch máy, tóm tắt}
+\end{center}
+\end{column}
+% ----- (c) Bidirectional RNN -----
+\begin{column}{0.32\textwidth}
+\begin{center}
+\textbf{Bidirectional RNN}\\
+\footnotesize nhìn cả 2 chiều thời gian
+
+\vspace{0.25cm}
+\begin{tikzpicture}[thick]
+    \node (out) at (1.1, 2.3) {\scriptsize \(h_t = [\overrightarrow{h_t} ; \overleftarrow{h_t}]\)};
+    \node (r1) [draw, fill=blue!10, rounded corners, minimum size=0.5cm] at (0, 1.1) {\scriptsize RNN};
+    \node (r2) [draw, fill=blue!10, rounded corners, minimum size=0.5cm] at (1.1, 1.1) {\scriptsize RNN};
+    \node (r3) [draw, fill=blue!10, rounded corners, minimum size=0.5cm] at (2.2, 1.1) {\scriptsize RNN};
+    \node (x1) at (0, 0) {\(x_1\)};
+    \node (x2) at (1.1, 0) {\(x_2\)};
+    \node (x3) at (2.2, 0) {\(x_3\)};
+
+    \draw[flowarrow] (x1) -- (r1);
+    \draw[flowarrow] (x2) -- (r2);
+    \draw[flowarrow] (x3) -- (r3);
+    \draw[flowarrow_teal, bend left=18] (r1) to (r2);
+    \draw[flowarrow_teal, bend left=18] (r2) to (r3);
+    \draw[flowarrow_red, bend right=18] (r3) to (r2);
+    \draw[flowarrow_red, bend right=18] (r2) to (r1);
+    \draw[flowarrow_green] (r2) -- (out);
+\end{tikzpicture}
+
+\vspace{0.25cm}
+\footnotesize \textit{NER, embedding; \textcolor{crimsonred}{không dùng dự báo tương lai — nhìn được tương lai = rò rỉ dữ liệu}}
+\end{center}
+\end{column}
+\end{columns}
+
+\vspace{0.2cm}
+\begin{exampleblock}{\textbf{Liên hệ bài toán asm6}}
+\centering Chuỗi giá quá khứ \(\rightarrow\) 1 giá ngày mai \(\Rightarrow\) bài toán thực nghiệm thuộc dạng \textbf{Many-to-One}.
+\end{exampleblock}
+\end{frame}
+
+% ---------------- SLIDE 17 ----------------
+\begin{frame}{Cơ chế Huấn luyện BPTT (Backpropagation Through Time)}
+Mô hình tính toán sai số tại mọi thời điểm và lan truyền ngược gradient ngược dòng thời gian từ \(T\) về $1$:
+
+\vspace{0.4cm}
+\begin{center}
+\begin{tikzpicture}[node distance=1.3cm, thick]
+    \node (x1) {\(x_1\)};
+    \node (h1) [draw, fill=blue!10, right=0.8cm of x1] {\(h_1\)};
+    \node (h2) [draw, fill=blue!10, right=1.3cm of h1] {\(h_2\)};
+    \node (h3) [draw, fill=blue!10, right=1.3cm of h2] {\(h_3\)};
+    \node (L3) [right=1.3cm of h3, text=red] {Loss \(L_3\)};
+    
+    \draw[->] (x1) -- (h1);
+    \draw[->] (h1) -- (h2) node[midway, above] {Forward};
+    \draw[->] (h2) -- (h3);
+    \draw[->] (h3) -- (L3);
+    
+    \draw[->, red, dashed, bend left=45] (L3) to node[midway, below] {\(\frac{\partial L}{\partial h_3}\)} (h3);
+    \draw[->, red, dashed, bend left=45] (h3) to node[midway, below] {\(\frac{\partial L}{\partial h_2}\)} (h2);
+    \draw[->, red, dashed, bend left=45] (h2) to node[midway, below] {\(\frac{\partial L}{\partial h_1}\)} (h1);
+\end{tikzpicture}
+\end{center}
+
+\vspace{0.3cm}
+Công thức Gradient cho \(U\):
+
+\[\frac{\partial L}{\partial U} = \sum_{t=1}^T \sum_{k=1}^t \frac{\partial L_t}{\partial h_t} \cdot \left( \prod_{j=k+1}^t \frac{\partial h_j}{\partial h_{j-1}} \right) \cdot \frac{\partial h_k}{\partial U}\]
+
+\end{frame}
+
+% ---------------- SLIDE 18 ----------------
+\begin{frame}{Vấn đề Triệt tiêu Gradient (Vanishing Gradient)}
+\textbf{Bản chất:} Phép nhân chuỗi ma trận $U$ liên tiếp qua $T-k$ bước thời gian:
+
+$$\frac{\partial L}{\partial h_k} = \frac{\partial L}{\partial h_t} \times [ \text{diag}(1 - h^2) \cdot U ] \times \dots \times [ \text{diag}(1 - h^2) \cdot U ]$$
+
+(nhân $T-k$ lần, đạo hàm $\tanh(z)$ nằm trong $(0, 1]$)
+
+\vspace{0.4cm}
+\begin{alertblock}{\textbf{Hậu quả khi Trị riêng lớn nhất của $U < 1$}}
+
+$$\Vert U^{T-k} \Vert \longrightarrow 0 \quad (\text{khi chuỗi dài ra})$$
+
+Tín hiệu đạo hàm ở các bước đầu tiên suy giảm theo hàm mũ về 0. Trọng số không thể cập nhật để học các liên kết ngữ cảnh quá khứ xa.
+\end{alertblock}
+\end{frame}
+
+% ---------------- SLIDE 19 ----------------
+\begin{frame}{Hiện tượng Nổ Gradient \& Gradient Clipping}
+\begin{alertblock}{\textbf{Hiện tượng Nổ Gradient (Exploding Gradient)}}
+\begin{itemize}
+\item Khi trị riêng lớn nhất của $U > 1$: $\Vert U^{T-k} \Vert$ bùng nổ vô tận theo hàm mũ.
+\item Bước nhảy trọng số quá lớn phá hủy vùng cực tiểu, làm tràn số (NaN / Inf).
+\end{itemize}
+\end{alertblock}
+
+\vspace{0.4cm}
+\begin{exampleblock}{\textbf{Giải pháp: Cắt tỉa Gradient (Gradient Norm Clipping)}}
+
+$$g_{\text{clipped}} = g \cdot \frac{\theta}{\Vert g \Vert} \quad \text{khi } \Vert g \Vert > \theta$$
+
+\textit{Vector ban đầu quá dài sẽ bị co ngắn lại cho bằng $\theta$, nhưng vẫn giữ nguyên hướng (hướng Gradient).}
+\end{exampleblock}
+\end{frame}
+
+% ---------------- SLIDE 20 ----------------
+\begin{frame}{Tổng kết Điểm nghẽn của Simple RNN}
+\begin{alertblock}{\textbf{1. Không có Cơ chế Chọn lọc (Unselective Memory)}}
+Mọi bước thời gian đều bị nén qua một hàm $\tanh$ duy nhất, thông tin quan trọng dễ bị thông tin rác làm loãng.
+\end{alertblock}
+
+\begin{alertblock}{\textbf{2. Mất Trí nhớ Dài hạn (Short-term Memory Horizon)}}
+Do triệt tiêu gradient, RNN thực tế chỉ nhớ được từ 5 đến 10 bước thời gian gần nhất.
+\end{alertblock}
+
+\begin{alertblock}{\textbf{3. Bắt buộc Tính toán Tuần tự (Sequential Bottleneck)}}
+$h_t$ chỉ tính được khi đã có $h_{t-1} \rightarrow$ KHÔNG THỂ SONG SONG HÓA trên GPU như Transformer hay CNN.
+\end{alertblock}
+\end{frame}
+
+% ---------------- SLIDE 21 ----------------
+\begin{frame}{Thiết lập Thực nghiệm Chuỗi Tài chính}
+\textit{Kiểm chứng hiệu năng của RNN trên 2 tập dữ liệu thực tế lớn từ Kaggle:}
+\vspace{0.4cm}
+
+\begin{itemize}
+\item \textbf{Tập 1:} Chuỗi giá vàng \& bạc hàng ngày (Gold \& Silver daily prices, 1968–2021).
+\item \textbf{Tập 2:} Chuỗi biến động giá \& khối lượng cổ phiếu Amazon (AMZN, 1997–2023).
+\end{itemize}
+\vspace{0.4cm}
+\begin{block}{\textbf{Cấu hình Thực nghiệm}}
+\begin{itemize}
+\item \textbf{Cửa sổ trượt:} 30 ngày lịch sử ($L=30$) để dự đoán bước tiếp theo ($t+1$).
+\item \textbf{Baseline đối chứng:} Phương pháp Naive / Persistence ($\hat{y}_{t+1} = y_t$ — Lấy giá hôm nay đoán cho ngày mai).
+\end{itemize}
+\end{block}
+\end{frame}
+
+% ---------------- SLIDE 22 ----------------
+\begin{frame}{Kết quả Thực nghiệm \& Hiện tượng Nghịch lý}
+Bảng so sánh độ lệch sai số căn quân phương (RMSE trên tập Test):
+
+\vspace{0.4cm}
+\begin{table}
+\centering
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{l c c c p{4.5cm}}
+\toprule
+\textbf{Tập dữ liệu} & \textbf{Naive Baseline} & \textbf{PyTorch RNN} & \textbf{Keras RNN} & \textbf{Đánh giá} \\
+\midrule
+Giá Vàng (Gold) & 15.48 & \textbf{15.45} & 16.42 & \textcolor{red}{\textit{Keras RNN chạy tệ hơn cả Naive}} \\
+Cổ phiếu AMZN & 3.14 & \textbf{3.13} & 3.18 & \textcolor{gray}{\textit{Xấp xỉ phương pháp Naive}} \\
+\bottomrule
+\end{tabular}%
+}
+\end{table}
+
+\vspace{0.4cm}
+\begin{alertblock}{\textbf{Nghịch lý Quan sát}}
+Một mạng nơ-ron học sâu phức tạp huấn luyện hàng chục epoch kết quả lại chỉ tương đương, thậm chí kém hơn cả một thuật toán "lười biếng" lấy giá hôm trước làm dự đoán!
+\end{alertblock}
+\end{frame}
+
+% ---------------- SLIDE 23 ----------------
+\begin{frame}{Bản chất Thất bại: Dịch chuyển Phân phối (Distribution Shift)}
+Tại sao Simple RNN lại thất bại ở bài toán dự báo giá kim loại?
+
+\vspace{0.4cm}
+\begin{alertblock}{\textbf{Phân phối Dữ liệu Train vs Test}}
+\begin{itemize}
+\item \textbf{Tập Train:} Giá cao nhất = $850.00$ USD (ĐÃ ĐƯỢC HỌC - Nội suy tốt)
+\item \textbf{Tập Test:} Giá thấp nhất = $1,049.40$ USD (CHƯA GẶP BAO GIỜ - Ngoại suy bất lực)
+\item $\rightarrow$ 100% dữ liệu Test > Train Max!
+\end{itemize}
+\end{alertblock}
+
+\vspace{0.2cm}
+\begin{exampleblock}{\textbf{Bài học \& Giải pháp khắc phục}}
+\begin{itemize}
+\item Mạng nơ-ron không thể ngoại suy trên vùng số liệu mới.
+\item \textbf{Giải pháp:} Không dự đoán mức giá tuyệt đối, phải chuyển thành tỷ suất sinh lời dừng (\textbf{Log-return}): $r_t = \ln(P_t / P_{t-1})$.
+\end{itemize}
+\end{exampleblock}
+\end{frame}
+
+% ---------------- SLIDE 24 ----------------
+\begin{frame}{Bước Tiến hóa LSTM: Đường dẫn Trí nhớ Dài hạn}
+Long Short-Term Memory bổ sung đường truyền thẳng \textbf{Cell State ($C_t$)} không bị cản trở bởi phép nhân ma trận lặp lại:
+
+\vspace{0.3cm}
+\begin{center}
+\begin{tikzpicture}[thick, node distance=1.3cm, scale=0.85, every node/.style={scale=0.85}]
+\node (ct_prev) {$C_{t-1}$};
+\node[circle, draw, right=1.8cm of ct_prev] (mul1) {$\times$};
+\node[circle, draw, right=2.8cm of mul1] (add) {$+$};
+\node[right=1.8cm of add] (ct) {$C_t$};
+
+\draw[->] (ct_prev) -- (mul1);
+\draw[->] (mul1) -- (add);
+\draw[->] (add) -- (ct);
+
+\node[below=1.2cm of mul1, draw, fill=red!20] (forget) {Forget Gate (\(f_t\))};
+\node[below=1.2cm of add, draw, fill=green!20] (input) {Input Gate (\(i_t\))};
+\node[right=0.8cm of input, draw, fill=orange!20] (output) {Output Gate (\(o_t\))};
+
+\draw[->] (forget) -- (mul1) node[midway, right] {Bỏ cái cũ};
+\draw[->] (input) -- (add) node[midway, right] {Ghi cái mới};
+
+\end{tikzpicture}
+\end{center}
+
+\vspace{0.2cm}
+\begin{itemize}
+\item \textbf{Cổng Quên ($f_t$):} Xóa bỏ các ký ức không còn phù hợp.
+\item \textbf{Cổng Ghi ($i_t$):} Chọn lọc thông tin mới đáng chú ý nạp vào.
+\item \textbf{Cổng Xuất ($o_t$):} Quyết định trích xuất thông tin gì ra ngoài trạng thái ẩn.
+\end{itemize}
+\end{frame}
+
+% ---------------- SLIDE 25 ----------------
+\begin{frame}{Tinh giản với GRU (Gated Recurrent Unit)}
+GRU rút gọn cấu trúc của LSTM, gộp Cell State và Hidden State thành một trạng thái duy nhất:
+
+\vspace{0.4cm}
+\begin{columns}[T]
+\begin{column}{0.48\textwidth}
+\begin{block}{\textbf{Cổng Cập nhật (Update Gate $z_t$)}}
+Cân bằng giữa việc giữ lại trí nhớ cũ và ghi đè trạng thái mới (gộp vai trò của Forget và Input gate).
+\end{block}
+\end{column}
+
+\begin{column}{0.48\textwidth}
+\begin{block}{\textbf{Cổng Đặt lại (Reset Gate $r_t$)}}
+Quyết định xem trạng thái quá khứ sẽ kết hợp bao nhiêu với đầu vào hiện tại.
+\end{block}
+\end{column}
+\end{columns}
+
+\vspace{0.4cm}
+\begin{exampleblock}{\textbf{Tối ưu hiệu suất}}
+Giảm bớt 25% số lượng tham số so với LSTM, tốc độ huấn luyện nhanh hơn rõ rệt mà hiệu quả thực nghiệm tương đương.
+\end{exampleblock}
+\end{frame}
+
+% ---------------- SLIDE 26 ----------------
+\begin{frame}{Tổng kết \& Bức tranh Toàn cảnh}
+\begin{center}
+\textbf{TIẾN TRÌNH CÔNG NGHỆ MÔ HÌNH HÓA DỮ LIỆU CHUỖI}
+\end{center}
+\vspace{0.2cm}
+\begin{table}
+\centering
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{p{3.5cm} p{3.5cm} p{3.5cm} p{3.5cm}}
+\toprule
+\textbf{MLP / 1D-CNN} (2012) & \textbf{RNN THUẦN} (1986-1990) & \textbf{LSTM / GRU} (1997-2014) & \textbf{TRANSFORMER} (2017+) \\
+\midrule
+$\bullet$ Ép phẳng, trượt cục bộ & $\bullet$ Bộ nhớ ẩn $h_t$ & $\bullet$ Cơ chế cổng kiểm soát & $\bullet$ Cơ chế Self-Attention \\
+$\bullet$ Mất tính tuần tự dài & $\bullet$ Bị triệt tiêu gradient & $\bullet$ Nhớ dài hạn rất tốt & $\bullet$ Xử lý song song tuyệt đối \\
+$\bullet$ Chỉ phù hợp chuỗi ngắn & $\bullet$ Dễ nổ đạo hàm & $\bullet$ Chuẩn mực Time-series & $\bullet$ Thống trị lĩnh vực LLM \\
+\bottomrule
+\end{tabular}%
+}
+\end{table}
+
+\vspace{0.1cm}
+\begin{block}{\textbf{Thông điệp kết luận}}
+Simple RNN đã đặt nền móng lý thuyết mang tính lịch sử về việc chia sẻ trọng số thời gian và trạng thái ẩn. Hiểu rõ các điểm nghẽn toán học của RNN chính là chìa khóa để làm chủ toàn bộ các mô hình học sâu chuỗi hiện đại.
+\end{block}
+\end{frame}
+
+\end{document}
