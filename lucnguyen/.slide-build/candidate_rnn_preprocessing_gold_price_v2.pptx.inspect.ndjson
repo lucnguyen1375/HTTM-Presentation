@@ -1,0 +1,238 @@
+{"kind":"deck","id":"pr/a2aj93","name":"Deck"}
+{"kind":"layout","layoutId":"13fb82ff-9d89-4256-aeac-68946fffaed7","name":"Master","type":"master"}
+{"kind":"layout","layoutId":"2bd7d6e0-683b-423a-9a3e-df30df961307","name":"Title Slide","type":"title"}
+{"kind":"slide","id":"sl/la8rn8","slide":1,"title":"PHẦN 2","textShapes":14}
+{"kind":"shape","id":"sh/fyh03uxc","slide":1,"bbox":[0,0,18,720]}
+{"kind":"textbox","id":"sh/gzq1czex","slide":1,"text":"PHẦN 2","textPreview":"PHẦN 2","textChars":6,"textLines":1,"bbox":[88,76,150,28]}
+{"kind":"textbox","id":"sh/h0zi54fi","slide":1,"text":"Tiền xử lý dữ liệu chuỗi\ncho RNN","textPreview":"Tiền xử lý dữ liệu chuỗi | cho RNN","textChars":32,"textLines":2,"bbox":[88,125,650,150]}
+{"kind":"textbox","id":"sh/69oj6pgv","slide":1,"text":"Từ token văn bản đến tensor giá vàng","textPreview":"Từ token văn bản đến tensor giá vàng","textChars":36,"textLines":1,"bbox":[92,300,560,34]}
+{"kind":"shape","id":"sh/7ux0zaxg","slide":1,"bbox":[88,410,510,108]}
+{"kind":"textbox","id":"sh/sv618fy1","slide":1,"text":"Thông điệp chính","textPreview":"Thông điệp chính","textChars":16,"textLines":1,"bbox":[112,430,180,24]}
+{"kind":"textbox","id":"sh/twfi1kfm","slide":1,"text":"Văn bản cần tokenizer và embedding.\nGiá vàng đã là dữ liệu số liên tục.","textPreview":"Văn bản cần tokenizer và embedding. | Giá vàng đã là dữ liệu số liên tục.","textChars":71,"textLines":2,"bbox":[112,459,430,46]}
+{"kind":"textbox","id":"sh/qp8ji9wz","slide":1,"text":"Notebook chạy được: rnn_sequence_preprocessing_gold_price.ipynb","textPreview":"Notebook chạy được: rnn_sequence_preprocessing_gold_price.ipynb","textChars":63,"textLines":1,"bbox":[88,660,560,24]}
+{"kind":"shape","id":"sh/rq10bexk","slide":1,"bbox":[770,100,390,470]}
+{"kind":"textbox","id":"sh/f2hc3i9c","slide":1,"text":"Dữ liệu thô trở thành tensor như thế nào?","textPreview":"Dữ liệu thô trở thành tensor như thế nào?","textChars":41,"textLines":1,"bbox":[800,135,320,64]}
+{"kind":"shape","id":"sh/e18vax8r","slide":1,"bbox":[805,280,68,68]}
+{"kind":"textbox","id":"sh/14ju5sr2","slide":1,"text":"priceₜ₋₂","textPreview":"priceₜ₋₂","textChars":8,"textLines":1,"bbox":[808,305,62,24]}
+{"kind":"shape","id":"sh/g3qdcnqx","slide":1,"bbox":[874,312,9,2]}
+{"kind":"shape","id":"sh/3q1c7298","slide":1,"bbox":[883,280,68,68]}
+{"kind":"textbox","id":"sh/25svex8n","slide":1,"text":"priceₜ₋₁","textPreview":"priceₜ₋₁","textChars":8,"textLines":1,"bbox":[886,305,62,24]}
+{"kind":"shape","id":"sh/psju9cre","slide":1,"bbox":[952,312,9,2]}
+{"kind":"shape","id":"sh/oradg7qt","slide":1,"bbox":[961,280,68,68]}
+{"kind":"textbox","id":"sh/bu1cb29k","slide":1,"text":"priceₜ","textPreview":"priceₜ","textChars":6,"textLines":1,"bbox":[964,305,62,24]}
+{"kind":"shape","id":"sh/qtsvih8z","slide":1,"bbox":[1030,312,9,2]}
+{"kind":"shape","id":"sh/mpwfals7","slide":1,"bbox":[1039,280,68,68]}
+{"kind":"textbox","id":"sh/nq5g36ts","slide":1,"text":"yₜ₊₁","textPreview":"yₜ₊₁","textChars":4,"textLines":1,"bbox":[1042,305,62,24]}
+{"kind":"textbox","id":"sh/8rexcbax","slide":1,"text":"chuỗi đầu vào","textPreview":"chuỗi đầu vào","textChars":13,"textLines":1,"bbox":[835,378,230,22]}
+{"kind":"textbox","id":"sh/9sny5gbi","slide":1,"text":"RNN","textPreview":"RNN","textChars":3,"textLines":1,"bbox":[924,425,80,38]}
+{"kind":"textbox","id":"sh/ylcf61sv","slide":1,"text":"dự đoán bước kế tiếp","textPreview":"dự đoán bước kế tiếp","textChars":20,"textLines":1,"bbox":[842,480,245,28]}
+{"kind":"notes","id":"nt/la8rn8","slide":1,"text":"Mở đầu: Không phải mọi dữ liệu chuỗi đều được xử lý giống nhau. Phần này phân biệt pipeline NLP với pipeline giá vàng. Nguồn: notebook rnn_sequence_preprocessing_gold_price.ipynb; dataset https://www.kaggle.com/datasets/lbronchal/gold-and-silver-prices-dataset"}
+{"kind":"slide","id":"sl/fqwuzh","slide":2,"title":"02","textShapes":27}
+{"kind":"shape","id":"sh/ry90fy1c","slide":2,"bbox":[0,0,1280,10]}
+{"kind":"textbox","id":"sh/czi1832x","slide":2,"text":"02","textPreview":"02","textChars":2,"textLines":1,"bbox":[72,35,52,30]}
+{"kind":"textbox","id":"sh/d0rih8ji","slide":2,"text":"Hai loại dữ liệu chuỗi, hai pipeline","textPreview":"Hai loại dữ liệu chuỗi, hai pipeline","textChars":36,"textLines":1,"bbox":[72,65,1050,58]}
+{"kind":"textbox","id":"sh/e10jadk3","slide":2,"text":"Tokenizer phù hợp với token rời rạc; giá vàng cần scaling và windowing.","textPreview":"Tokenizer phù hợp với token rời rạc; giá vàng cần scaling và windowing.","textChars":71,"textLines":1,"bbox":[74,116,1080,30]}
+{"kind":"textbox","id":"sh/z290ji1o","slide":2,"text":"Tiền xử lý chuỗi cho RNN · PyTorch","textPreview":"Tiền xử lý chuỗi cho RNN · PyTorch","textChars":34,"textLines":1,"bbox":[72,684,500,18]}
+{"kind":"shape","id":"sh/03i1cn29","slide":2,"bbox":[72,165,522,430]}
+{"kind":"shape","id":"sh/14rilsje","slide":2,"bbox":[686,165,522,430]}
+{"kind":"textbox","id":"sh/m50jexkz","slide":2,"text":"Chuỗi văn bản","textPreview":"Chuỗi văn bản","textChars":13,"textLines":1,"bbox":[102,192,300,36]}
+{"kind":"textbox","id":"sh/n6t0ni1k","slide":2,"text":"Chuỗi giá vàng","textPreview":"Chuỗi giá vàng","textChars":14,"textLines":1,"bbox":[716,192,300,36]}
+{"kind":"shape","id":"sh/judsbmd4","slide":2,"bbox":[104,265,10,10]}
+{"kind":"textbox","id":"sh/itkb2hwz","slide":2,"text":"Tokenizer","textPreview":"Tokenizer","textChars":9,"textLines":1,"bbox":[126,260,145,24]}
+{"kind":"textbox","id":"sh/5gvadwva","slide":2,"text":"tách câu thành token","textPreview":"tách câu thành token","textChars":20,"textLines":1,"bbox":[274,260,280,42]}
+{"kind":"shape","id":"sh/kvmt4rep","slide":2,"bbox":[104,322,10,10]}
+{"kind":"textbox","id":"sh/vqts7md8","slide":2,"text":"Vocabulary","textPreview":"Vocabulary","textChars":10,"textLines":1,"bbox":[126,317,145,24]}
+{"kind":"textbox","id":"sh/apkbyhwn","slide":2,"text":"token → ID","textPreview":"token → ID","textChars":10,"textLines":1,"bbox":[274,317,280,42]}
+{"kind":"shape","id":"sh/xsba9wve","slide":2,"bbox":[104,379,10,10]}
+{"kind":"textbox","id":"sh/wr2t0ret","slide":2,"text":"Integer encoding","textPreview":"Integer encoding","textChars":16,"textLines":1,"bbox":[126,374,145,24]}
+{"kind":"textbox","id":"sh/fmxcj6dc","slide":2,"text":"ID nguyên cho mô hình","textPreview":"ID nguyên cho mô hình","textChars":21,"textLines":1,"bbox":[274,374,280,42]}
+{"kind":"shape","id":"sh/uloba1wr","slide":2,"bbox":[104,436,10,10]}
+{"kind":"textbox","id":"sh/qh8v25gz","slide":2,"text":"Padding","textPreview":"Padding","textChars":7,"textLines":1,"bbox":[126,431,145,24]}
+{"kind":"textbox","id":"sh/rihwbaxk","slide":2,"text":"cùng độ dài trong batch","textPreview":"cùng độ dài trong batch","textChars":23,"textLines":1,"bbox":[274,431,280,42]}
+{"kind":"shape","id":"sh/cjqd4fy5","slide":2,"bbox":[104,493,10,10]}
+{"kind":"textbox","id":"sh/dkzedkfq","slide":2,"text":"Embedding","textPreview":"Embedding","textChars":9,"textLines":1,"bbox":[126,488,145,24]}
+{"kind":"textbox","id":"sh/e5sf6pgb","slide":2,"text":"ID → vector thực","textPreview":"ID → vector thực","textChars":16,"textLines":1,"bbox":[274,488,280,42]}
+{"kind":"shape","id":"sh/z61wfuxw","slide":2,"bbox":[718,265,10,10]}
+{"kind":"textbox","id":"sh/07ax8zyh","slide":2,"text":"Làm sạch date/price","textPreview":"Làm sạch date/price","textChars":19,"textLines":1,"bbox":[740,260,145,24]}
+{"kind":"textbox","id":"sh/18jehkfm","slide":2,"text":"date là chỉ mục, price là số","textPreview":"date là chỉ mục, price là số","textChars":28,"textLines":1,"bbox":[888,260,280,42]}
+{"kind":"shape","id":"sh/upovulg7","slide":2,"bbox":[718,322,10,10]}
+{"kind":"textbox","id":"sh/faxw3qxc","slide":2,"text":"Chia theo thời gian","textPreview":"Chia theo thời gian","textChars":19,"textLines":1,"bbox":[740,317,145,24]}
+{"kind":"textbox","id":"sh/x4ny9ozu","slide":2,"text":"giữ đúng thứ tự quá khứ → tương lai","textPreview":"giữ đúng thứ tự quá khứ → tương lai","textChars":35,"textLines":1,"bbox":[888,317,280,42]}
+{"kind":"shape","id":"sh/w3uh03ip","slide":2,"bbox":[718,379,10,10]}
+{"kind":"textbox","id":"sh/b2lg7yh4","slide":2,"text":"log1p + scaling","textPreview":"log1p + scaling","textChars":15,"textLines":1,"bbox":[740,374,145,24]}
+{"kind":"textbox","id":"sh/a1czyt0j","slide":2,"text":"đưa giá về miền dễ học","textPreview":"đưa giá về miền dễ học","textChars":22,"textLines":1,"bbox":[888,374,280,42]}
+{"kind":"shape","id":"sh/l8nid8z6","slide":2,"bbox":[718,436,10,10]}
+{"kind":"textbox","id":"sh/k7eh43il","slide":2,"text":"Cửa sổ 30 bước","textPreview":"Cửa sổ 30 bước","textChars":14,"textLines":1,"bbox":[740,431,145,24]}
+{"kind":"textbox","id":"sh/j65gbyh0","slide":2,"text":"30 quan sát → dự đoán quan sát kế","textPreview":"30 quan sát → dự đoán quan sát kế","textChars":33,"textLines":1,"bbox":[888,431,280,42]}
+{"kind":"shape","id":"sh/y5wz2t0f","slide":2,"bbox":[718,493,10,10]}
+{"kind":"textbox","id":"sh/1c3y14z2","slide":2,"text":"Tensor (N, L, F)","textPreview":"Tensor (N, L, F)","textChars":16,"textLines":1,"bbox":[740,488,145,24]}
+{"kind":"textbox","id":"sh/0bahszih","slide":2,"text":"(samples, timesteps, features)","textPreview":"(samples, timesteps, features)","textChars":30,"textLines":1,"bbox":[888,488,280,42]}
+{"kind":"shape","id":"sh/o32twb61","slide":2,"bbox":[182,615,916,42]}
+{"kind":"textbox","id":"sh/p4bapgnm","slide":2,"text":"date không phải token · price không cần vocabulary · fixed window nên thường không cần padding","textPreview":"date không phải token · price không cần vocabulary · fixed window nên thường không cần padding","textChars":94,"textLines":1,"bbox":[205,625,870,20]}
+{"kind":"notes","id":"nt/fqwuzh","slide":2,"text":"Nhấn mạnh ranh giới khái niệm. Chuỗi văn bản bắt đầu từ string và cần ánh xạ token sang số. Dataset giá vàng đã có giá trị số, nên không được áp dụng embedding theo cách của NLP."}
+{"kind":"slide","id":"sl/0ra93n","slide":3,"title":"03","textShapes":19}
+{"kind":"shape","id":"sh/tcj2xgbi","slide":3,"bbox":[0,0,1280,10]}
+{"kind":"textbox","id":"sh/69832lc7","slide":3,"text":"03","textPreview":"03","textChars":2,"textLines":1,"bbox":[72,35,52,30]}
+{"kind":"textbox","id":"sh/7a1kvqtc","slide":3,"text":"Tokenizer, vocabulary, padding và embedding","textPreview":"Tokenizer, vocabulary, padding và embedding","textChars":43,"textLines":1,"bbox":[72,65,1050,58]}
+{"kind":"textbox","id":"sh/k7ql0bu1","slide":3,"text":"Một câu văn đi qua bốn bước trước khi đến RNN.","textPreview":"Một câu văn đi qua bốn bước trước khi đến RNN.","textChars":46,"textLines":1,"bbox":[74,116,1080,30]}
+{"kind":"textbox","id":"sh/l8z2tgbm","slide":3,"text":"Tiền xử lý chuỗi cho RNN · PyTorch","textPreview":"Tiền xử lý chuỗi cho RNN · PyTorch","textChars":34,"textLines":1,"bbox":[72,684,500,18]}
+{"kind":"shape","id":"sh/y583y1cv","slide":3,"bbox":[72,190,250,255]}
+{"kind":"textbox","id":"sh/j6hkr6tg","slide":3,"text":"01","textPreview":"01","textChars":2,"textLines":1,"bbox":[92,214,48,24]}
+{"kind":"textbox","id":"sh/w3qlwbup","slide":3,"text":"Tokenizer","textPreview":"Tokenizer","textChars":9,"textLines":1,"bbox":[92,254,200,32]}
+{"kind":"textbox","id":"sh/x4z2pwba","slide":3,"text":"\"giá vàng tăng\"\n→ [giá, vàng, tăng]","textPreview":"\"giá vàng tăng\" | → [giá, vàng, tăng]","textChars":35,"textLines":2,"bbox":[92,325,205,80]}
+{"kind":"shape","id":"sh/tovu1cfe","slide":3,"bbox":[324,315,32,3]}
+{"kind":"shape","id":"sh/s32dsryt","slide":3,"bbox":[358,190,250,255]}
+{"kind":"textbox","id":"sh/72tczmx8","slide":3,"text":"02","textPreview":"02","textChars":2,"textLines":1,"bbox":[378,214,48,24]}
+{"kind":"textbox","id":"sh/61kvqhgn","slide":3,"text":"Vocabulary","textPreview":"Vocabulary","textChars":10,"textLines":1,"bbox":[378,254,200,32]}
+{"kind":"textbox","id":"sh/50buxcf2","slide":3,"text":"giá → 2\nvàng → 3\ntăng → 4","textPreview":"giá → 2 | vàng → 3 | tăng → 4","textChars":25,"textLines":3,"bbox":[378,325,205,80]}
+{"kind":"shape","id":"sh/kz2do7yh","slide":3,"bbox":[610,315,32,3]}
+{"kind":"shape","id":"sh/jytcv2xc","slide":3,"bbox":[644,190,250,255]}
+{"kind":"textbox","id":"sh/ixkbmxgr","slide":3,"text":"03","textPreview":"03","textChars":2,"textLines":1,"bbox":[664,214,48,24]}
+{"kind":"textbox","id":"sh/xwbutsf6","slide":3,"text":"Padding","textPreview":"Padding","textChars":7,"textLines":1,"bbox":[664,254,200,32]}
+{"kind":"textbox","id":"sh/wvitk7yl","slide":3,"text":"[2, 3, 4]\n→ [2, 3, 4, 0, 0, 0]","textPreview":"[2, 3, 4] | → [2, 3, 4, 0, 0, 0]","textChars":30,"textLines":2,"bbox":[664,325,205,80]}
+{"kind":"shape","id":"sh/ofmd076h","slide":3,"bbox":[896,315,32,3]}
+{"kind":"shape","id":"sh/9gvu9cn2","slide":3,"bbox":[930,190,250,255]}
+{"kind":"textbox","id":"sh/md4vyxob","slide":3,"text":"04","textPreview":"04","textChars":2,"textLines":1,"bbox":[950,214,48,24]}
+{"kind":"textbox","id":"sh/nedc725w","slide":3,"text":"Embedding","textPreview":"Embedding","textChars":9,"textLines":1,"bbox":[950,254,200,32]}
+{"kind":"textbox","id":"sh/0bmdwn65","slide":3,"text":"ID 3\n→ vector 8 chiều","textPreview":"ID 3 | → vector 8 chiều","textChars":21,"textLines":2,"bbox":[950,325,205,80]}
+{"kind":"shape","id":"sh/1cvu5snq","slide":3,"bbox":[192,500,896,105]}
+{"kind":"textbox","id":"sh/e9kbuxof","slide":3,"text":"Embedding matrix","textPreview":"Embedding matrix","textChars":16,"textLines":1,"bbox":[225,523,250,25]}
+{"kind":"textbox","id":"sh/fadc3i50","slide":3,"text":"E ∈ R^(V × d)     |     token_id i → E[i]     |     output: (batch, length, d)","textPreview":"E ∈ R^(V × d)     |     token_id i → E[i]     |     output: (batch, length, d)","textChars":78,"textLines":1,"bbox":[225,560,820,27]}
+{"kind":"textbox","id":"sh/k76d8r6p","slide":3,"text":"Notebook output: token_ids (4, 6)  ·  embedding (4, 6, 8)","textPreview":"Notebook output: token_ids (4, 6)  ·  embedding (4, 6, 8)","textChars":57,"textLines":1,"bbox":[72,635,700,24]}
+{"kind":"notes","id":"nt/0ra93n","slide":3,"text":"Giải thích padding bằng số 0 và liên hệ với mask. Embedding không biến giá vàng thành vector; nó dành cho các ID nguyên của token. Nguồn tham khảo: https://pytorch.org/docs/stable/generated/torch.nn.Embedding.html"}
+{"kind":"slide","id":"sl/50ne1k","slide":4,"title":"04","textShapes":37}
+{"kind":"shape","id":"sh/ep07yd8b","slide":4,"bbox":[0,0,1280,10]}
+{"kind":"textbox","id":"sh/1srqtsrm","slide":4,"text":"04","textPreview":"04","textChars":2,"textLines":1,"bbox":[72,35,52,30]}
+{"kind":"textbox","id":"sh/0rip0nqh","slide":4,"text":"Pipeline tiền xử lý giá vàng","textPreview":"Pipeline tiền xử lý giá vàng","textChars":28,"textLines":1,"bbox":[72,65,1050,58]}
+{"kind":"textbox","id":"sh/rm98ny9k","slide":4,"text":"Dataset gold_price.csv: từ CSV đến cửa sổ 30 bước.","textPreview":"Dataset gold_price.csv: từ CSV đến cửa sổ 30 bước.","textChars":50,"textLines":1,"bbox":[74,116,1080,30]}
+{"kind":"textbox","id":"sh/qlg7ut8z","slide":4,"text":"Tiền xử lý chuỗi cho RNN · PyTorch","textPreview":"Tiền xử lý chuỗi cho RNN · PyTorch","textChars":34,"textLines":1,"bbox":[72,684,500,18]}
+{"kind":"shape","id":"sh/dorqp8rq","slide":4,"bbox":[72,155,218,72]}
+{"kind":"textbox","id":"sh/snipw3q5","slide":4,"text":"13,461","textPreview":"13,461","textChars":6,"textLines":1,"bbox":[90,168,170,28]}
+{"kind":"textbox","id":"sh/bit8z2p4","slide":4,"text":"dòng thô","textPreview":"dòng thô","textChars":8,"textLines":1,"bbox":[90,198,170,20]}
+{"kind":"shape","id":"sh/ahkr6x8j","slide":4,"bbox":[322,155,218,72]}
+{"kind":"textbox","id":"sh/c76d8ryl","slide":4,"text":"13,320","textPreview":"13,320","textChars":6,"textLines":1,"bbox":[340,168,170,28]}
+{"kind":"textbox","id":"sh/d8ze1wf6","slide":4,"text":"dòng sau làm sạch","textPreview":"dòng sau làm sạch","textChars":17,"textLines":1,"bbox":[340,198,170,20]}
+{"kind":"shape","id":"sh/q5ov6hgf","slide":4,"bbox":[572,155,218,72]}
+{"kind":"textbox","id":"sh/r6xczmx0","slide":4,"text":"30","textPreview":"30","textChars":2,"textLines":1,"bbox":[590,168,170,28]}
+{"kind":"textbox","id":"sh/436d47yp","slide":4,"text":"bước nhìn lại","textPreview":"bước nhìn lại","textChars":13,"textLines":1,"bbox":[590,198,170,20]}
+{"kind":"shape","id":"sh/p4fuxcfa","slide":4,"bbox":[72,270,250,100]}
+{"kind":"shape","id":"sh/2hov2xgj","slide":4,"bbox":[86,284,28,28]}
+{"kind":"textbox","id":"sh/3ixcv2x4","slide":4,"text":"1","textPreview":"1","textChars":1,"textLines":1,"bbox":[86,289,28,18]}
+{"kind":"textbox","id":"sh/gfmd07yd","slide":4,"text":"Đọc CSV","textPreview":"Đọc CSV","textChars":7,"textLines":1,"bbox":[126,283,184,22]}
+{"kind":"textbox","id":"sh/hgfutcfy","slide":4,"text":"date, price","textPreview":"date, price","textChars":11,"textLines":1,"bbox":[88,320,218,42]}
+{"kind":"shape","id":"sh/x0n2h4nq","slide":4,"bbox":[358,270,250,100]}
+{"kind":"shape","id":"sh/wze18zm5","slide":4,"bbox":[372,284,28,28]}
+{"kind":"textbox","id":"sh/vylkfu5k","slide":4,"text":"2","textPreview":"2","textChars":1,"textLines":1,"bbox":[372,289,28,18]}
+{"kind":"textbox","id":"sh/axcj6p4z","slide":4,"text":"Chuyển kiểu","textPreview":"Chuyển kiểu","textChars":11,"textLines":1,"bbox":[412,283,184,22]}
+{"kind":"textbox","id":"sh/9w32dkne","slide":4,"text":"datetime, float","textPreview":"datetime, float","textChars":15,"textLines":1,"bbox":[374,320,218,42]}
+{"kind":"shape","id":"sh/ovu14fmt","slide":4,"bbox":[644,270,250,100]}
+{"kind":"shape","id":"sh/nulkbu58","slide":4,"bbox":[658,284,28,28]}
+{"kind":"textbox","id":"sh/mtcj2p43","slide":4,"text":"3","textPreview":"3","textChars":1,"textLines":1,"bbox":[658,289,28,18]}
+{"kind":"textbox","id":"sh/ts72po3y","slide":4,"text":"Làm sạch","textPreview":"Làm sạch","textChars":8,"textLines":1,"bbox":[698,283,184,22]}
+{"kind":"textbox","id":"sh/srylgjmd","slide":4,"text":"dropna, deduplicate","textPreview":"dropna, deduplicate","textChars":19,"textLines":1,"bbox":[660,320,218,42]}
+{"kind":"shape","id":"sh/qx8zalkv","slide":4,"bbox":[930,270,250,100]}
+{"kind":"shape","id":"sh/ryhg3ql0","slide":4,"bbox":[944,284,28,28]}
+{"kind":"textbox","id":"sh/czqhcb2l","slide":4,"text":"4","textPreview":"4","textChars":1,"textLines":1,"bbox":[944,289,28,18]}
+{"kind":"textbox","id":"sh/d0jy5g36","slide":4,"text":"Sắp xếp","textPreview":"Sắp xếp","textChars":7,"textLines":1,"bbox":[984,283,184,22]}
+{"kind":"textbox","id":"sh/298z61kj","slide":4,"text":"chronological","textPreview":"chronological","textChars":13,"textLines":1,"bbox":[946,320,218,42]}
+{"kind":"shape","id":"sh/3ahgz6l4","slide":4,"bbox":[72,395,250,100]}
+{"kind":"shape","id":"sh/4vqh8b2p","slide":4,"bbox":[86,409,28,28]}
+{"kind":"textbox","id":"sh/pwzy1g3a","slide":4,"text":"5","textPreview":"5","textChars":1,"textLines":1,"bbox":[86,414,28,18]}
+{"kind":"textbox","id":"sh/m5szi5kn","slide":4,"text":"Chia tập","textPreview":"Chia tập","textChars":8,"textLines":1,"bbox":[126,408,184,22]}
+{"kind":"textbox","id":"sh/n610ba18","slide":4,"text":"70 / 15 / 15","textPreview":"70 / 15 / 15","textChars":12,"textLines":1,"bbox":[88,445,218,42]}
+{"kind":"shape","id":"sh/7yhw725o","slide":4,"bbox":[358,395,250,100]}
+{"kind":"shape","id":"sh/6x8vexo3","slide":4,"bbox":[372,409,28,28]}
+{"kind":"textbox","id":"sh/tkze9cnu","slide":4,"text":"6","textPreview":"6","textChars":1,"textLines":1,"bbox":[372,414,28,18]}
+{"kind":"textbox","id":"sh/8jqdg769","slide":4,"text":"Biến đổi","textPreview":"Biến đổi","textChars":8,"textLines":1,"bbox":[412,408,184,22]}
+{"kind":"textbox","id":"sh/juhc325s","slide":4,"text":"log1p(price)","textPreview":"log1p(price)","textChars":12,"textLines":1,"bbox":[374,445,218,42]}
+{"kind":"shape","id":"sh/ytovaxo7","slide":4,"bbox":[644,395,250,100]}
+{"kind":"shape","id":"sh/lwzu5sny","slide":4,"bbox":[658,409,28,28]}
+{"kind":"textbox","id":"sh/kvqdcn6d","slide":4,"text":"7","textPreview":"7","textChars":1,"textLines":1,"bbox":[658,414,28,18]}
+{"kind":"textbox","id":"sh/3q1wfm5w","slide":4,"text":"Scaling","textPreview":"Scaling","textChars":7,"textLines":1,"bbox":[698,408,184,22]}
+{"kind":"textbox","id":"sh/ipsvmhob","slide":4,"text":"fit trên train","textPreview":"fit trên train","textChars":14,"textLines":1,"bbox":[660,445,218,42]}
+{"kind":"shape","id":"sh/0vmtgjmt","slide":4,"bbox":[930,395,250,100]}
+{"kind":"shape","id":"sh/1wva9o3e","slide":4,"bbox":[944,409,28,28]}
+{"kind":"textbox","id":"sh/etkre94n","slide":4,"text":"8","textPreview":"8","textChars":1,"textLines":1,"bbox":[944,414,28,18]}
+{"kind":"textbox","id":"sh/futs7el8","slide":4,"text":"Windowing","textPreview":"Windowing","textChars":9,"textLines":1,"bbox":[984,408,184,22]}
+{"kind":"textbox","id":"sh/ozmtk3m5","slide":4,"text":"30 → 1 bước","textPreview":"30 → 1 bước","textChars":11,"textLines":1,"bbox":[946,445,218,42]}
+{"kind":"shape","id":"sh/90vado3q","slide":4,"bbox":[72,540,1136,92]}
+{"kind":"textbox","id":"sh/mx4bit4z","slide":4,"text":"Min-Max scaling","textPreview":"Min-Max scaling","textChars":15,"textLines":1,"bbox":[102,558,190,24]}
+{"kind":"textbox","id":"sh/nydsbylk","slide":4,"text":"x_scaled = (x − min_train) / (max_train − min_train)","textPreview":"x_scaled = (x − min_train) / (max_train − min_train)","textChars":52,"textLines":1,"bbox":[300,556,590,28]}
+{"kind":"textbox","id":"sh/w36to3m1","slide":4,"text":"Scaler chỉ học từ train; fit trên toàn bộ dữ liệu sẽ gây data leakage.","textPreview":"Scaler chỉ học từ train; fit trên toàn bộ dữ liệu sẽ gây data leakage.","textChars":70,"textLines":1,"bbox":[300,593,790,22]}
+{"kind":"notes","id":"nt/50ne1k","slide":4,"text":"Đi chậm ở bước chia tập và scaling. Đây là phần dễ bị hỏi nhất: vì sao không fit scaler trên toàn bộ dataset? Vì max/min của tương lai sẽ làm mô hình biết trước phân phối test. Dataset source: https://www.kaggle.com/datasets/lbronchal/gold-and-silver-prices-dataset"}
+{"kind":"slide","id":"sl/jpyidf","slide":5,"title":"05","textShapes":11}
+{"kind":"shape","id":"sh/43mxg7y9","slide":5,"bbox":[0,0,1280,10]}
+{"kind":"textbox","id":"sh/32dg72h4","slide":5,"text":"05","textPreview":"05","textChars":2,"textLines":1,"bbox":[72,35,52,30]}
+{"kind":"textbox","id":"sh/214fex0j","slide":5,"text":"Code minh họa: tokenizer và embedding","textPreview":"Code minh họa: tokenizer và embedding","textChars":37,"textLines":1,"bbox":[72,65,1050,58]}
+{"kind":"textbox","id":"sh/d8fydcz6","slide":5,"text":"Snippet ngắn trên slide; code đầy đủ nằm trong notebook.","textPreview":"Snippet ngắn trên slide; code đầy đủ nằm trong notebook.","textChars":56,"textLines":1,"bbox":[74,116,1080,30]}
+{"kind":"textbox","id":"sh/c76xk7yl","slide":5,"text":"Tiền xử lý chuỗi cho RNN · PyTorch","textPreview":"Tiền xử lý chuỗi cho RNN · PyTorch","textChars":34,"textLines":1,"bbox":[72,684,500,18]}
+{"kind":"shape","id":"sh/r6xgbmh0","slide":5,"bbox":[72,175,650,420]}
+{"kind":"textbox","id":"sh/q5ofihgf","slide":5,"text":"tokens = text.lower().split()\n\nvocab = {'<PAD>': 0, '<UNK>': 1}\n\nencoded = [\n    vocab.get(token, vocab['<UNK>'])\n    for token in tokens\n]\n\npadded = encoded[:max_len] + [0] * (\n    max_len - len(encoded)\n)\n\nembedding = nn.Embedding(\n    len(vocab), embedding_dim=8,\n    padding_idx=0\n)","textPreview":"tokens = text.lower().split() |  | vocab = {'<PAD>': 0, '<UNK>': 1} |  | encoded = [ |     vocab.get(token, vocab['<UNK>']) |     for tok...","textChars":286,"textLines":17,"bbox":[90,191,614,392]}
+{"kind":"shape","id":"sh/1wfyhwz2","slide":5,"bbox":[770,175,438,420]}
+{"kind":"textbox","id":"sh/0v6xoryh","slide":5,"text":"Kết quả shape","textPreview":"Kết quả shape","textChars":13,"textLines":1,"bbox":[810,210,340,32]}
+{"kind":"textbox","id":"sh/2pkfu58v","slide":5,"text":"token_ids","textPreview":"token_ids","textChars":9,"textLines":1,"bbox":[810,290,160,28]}
+{"kind":"textbox","id":"sh/3qtg3a9g","slide":5,"text":"(4, 6)","textPreview":"(4, 6)","textChars":6,"textLines":1,"bbox":[1000,287,150,34]}
+{"kind":"shape","id":"sh/obmxwfq1","slide":5,"bbox":[810,340,330,1]}
+{"kind":"textbox","id":"sh/pcvy5krm","slide":5,"text":"embedding","textPreview":"embedding","textChars":9,"textLines":1,"bbox":[810,375,160,28]}
+{"kind":"textbox","id":"sh/qd4fyp87","slide":5,"text":"(4, 6, 8)","textPreview":"(4, 6, 8)","textChars":9,"textLines":1,"bbox":[980,372,170,34]}
+{"kind":"shape","id":"sh/bedg7u9c","slide":5,"bbox":[810,470,330,82]}
+{"kind":"textbox","id":"sh/cfmx0zqx","slide":5,"text":"Trong NLP, input là ID rời rạc nên cần embedding.","textPreview":"Trong NLP, input là ID rời rạc nên cần embedding.","textChars":49,"textLines":1,"bbox":[830,492,290,44]}
+{"kind":"notes","id":"nt/jpyidf","slide":5,"text":"Đây là slide code duy nhất dành riêng cho NLP. Không giải thích từng dòng quá lâu; chỉ chỉ ra luồng string → ID → padding → vector. Full code đã chạy trong notebook."}
+{"kind":"slide","id":"sl/0o42sb","slide":6,"title":"06","textShapes":12}
+{"kind":"shape","id":"sh/0nmdkfat","slide":6,"bbox":[0,0,1280,10]}
+{"kind":"textbox","id":"sh/zmtwbat8","slide":6,"text":"06","textPreview":"06","textChars":2,"textLines":1,"bbox":[72,35,52,30]}
+{"kind":"textbox","id":"sh/ylkvi5sn","slide":6,"text":"Code minh họa: chuỗi giá vàng","textPreview":"Code minh họa: chuỗi giá vàng","textChars":29,"textLines":1,"bbox":[72,65,1050,58]}
+{"kind":"textbox","id":"sh/9svehkba","slide":6,"text":"Giá vàng không qua tokenizer; giá được làm sạch, biến đổi và cắt cửa sổ.","textPreview":"Giá vàng không qua tokenizer; giá được làm sạch, biến đổi và cắt cửa sổ.","textChars":72,"textLines":1,"bbox":[74,116,1080,30]}
+{"kind":"textbox","id":"sh/8rmdofa5","slide":6,"text":"Tiền xử lý chuỗi cho RNN · PyTorch","textPreview":"Tiền xử lý chuỗi cho RNN · PyTorch","textChars":34,"textLines":1,"bbox":[72,684,500,18]}
+{"kind":"shape","id":"sh/nqdwfutk","slide":6,"bbox":[72,172,690,430]}
+{"kind":"textbox","id":"sh/mp4vmpsz","slide":6,"text":"df['date'] = pd.to_datetime(df['date'])\ndf['price'] = pd.to_numeric(df['price'])\n\ndf = (\n    df.dropna(subset=['date', 'price'])\n      .drop_duplicates('date')\n      .sort_values('date')\n)\n\nraw_prices = df['price'].to_numpy().reshape(-1, 1)\nvalues = np.log1p(raw_prices)\nscaler.fit(values[:train_end])\nscaled_values = scaler.transform(values)","textPreview":"df['date'] = pd.to_datetime(df['date']) | df['price'] = pd.to_numeric(df['price']) |  | df = ( |     df.dropna(subset=['date', 'price']) ...","textChars":342,"textLines":13,"bbox":[90,188,654,402]}
+{"kind":"shape","id":"sh/hgfel4bm","slide":6,"bbox":[810,172,398,430]}
+{"kind":"textbox","id":"sh/wf6dsza1","slide":6,"text":"Tensor đưa vào RNN","textPreview":"Tensor đưa vào RNN","textChars":18,"textLines":1,"bbox":[842,210,330,32]}
+{"kind":"textbox","id":"sh/2h4j6dg3","slide":6,"text":"X_train","textPreview":"X_train","textChars":7,"textLines":1,"bbox":[842,285,150,30]}
+{"kind":"textbox","id":"sh/3id0ziho","slide":6,"text":"(9294, 30, 1)","textPreview":"(9294, 30, 1)","textChars":13,"textLines":1,"bbox":[842,326,320,42]}
+{"kind":"textbox","id":"sh/4jm18ny9","slide":6,"text":"samples · timesteps · features","textPreview":"samples · timesteps · features","textChars":30,"textLines":1,"bbox":[842,375,320,22]}
+{"kind":"shape","id":"sh/pkvi1szu","slide":6,"bbox":[842,425,316,2]}
+{"kind":"textbox","id":"sh/ql4jaxgf","slide":6,"text":"y_train","textPreview":"y_train","textChars":7,"textLines":1,"bbox":[842,455,150,28]}
+{"kind":"textbox","id":"sh/rmd032h0","slide":6,"text":"(9294, 1)","textPreview":"(9294, 1)","textChars":9,"textLines":1,"bbox":[842,495,320,38]}
+{"kind":"textbox","id":"sh/cnm1c7yl","slide":6,"text":"30 quan sát quá khứ → giá bước kế tiếp","textPreview":"30 quan sát quá khứ → giá bước kế tiếp","textChars":38,"textLines":1,"bbox":[842,555,320,25]}
+{"kind":"notes","id":"nt/0o42sb","slide":6,"text":"Giải thích shape bằng một mẫu cụ thể: X là 30 giá liên tiếp, y là giá tiếp theo. Nhấn mạnh split theo thời gian trước khi scaler fit. Full implementation nằm trong cell windowing của notebook."}
+{"kind":"slide","id":"sl/2k2fxg","slide":7,"title":"07","textShapes":11}
+{"kind":"shape","id":"sh/cfydkjml","slide":7,"bbox":[0,0,1280,10]}
+{"kind":"textbox","id":"sh/repcbel0","slide":7,"text":"07","textPreview":"07","textChars":2,"textLines":1,"bbox":[72,35,52,30]}
+{"kind":"textbox","id":"sh/qdgbi94f","slide":7,"text":"Simple RNN: input, training và loss","textPreview":"Simple RNN: input, training và loss","textChars":35,"textLines":1,"bbox":[72,65,1050,58]}
+{"kind":"textbox","id":"sh/pc7u9o3u","slide":7,"text":"Chỉ giữ phần RNN cần để hiểu tensor đi vào đâu và kết quả được tạo ra thế nào.","textPreview":"Chỉ giữ phần RNN cần để hiểu tensor đi vào đâu và kết quả được tạo ra thế nào.","textChars":78,"textLines":1,"bbox":[74,116,1080,30]}
+{"kind":"textbox","id":"sh/4bytgjmp","slide":7,"text":"Tiền xử lý chuỗi cho RNN · PyTorch","textPreview":"Tiền xử lý chuỗi cho RNN · PyTorch","textChars":34,"textLines":1,"bbox":[72,684,500,18]}
+{"kind":"shape","id":"sh/3apc7el4","slide":7,"bbox":[72,168,575,300]}
+{"kind":"textbox","id":"sh/29gbe94j","slide":7,"text":"class SimpleRNNRegressor(nn.Module):\n    def __init__(self):\n        super().__init__()\n        self.rnn = nn.RNN(\n            input_size=1,\n            hidden_size=32,\n            batch_first=True\n        )\n        self.output_layer = nn.Linear(32, 1)\n\n    def forward(self, x):\n        output, _ = self.rnn(x)\n        return self.output_layer(output[:, -1, :])","textPreview":"class SimpleRNNRegressor(nn.Module): |     def __init__(self): |         super().__init__() |         self.rnn = nn.RNN( |             in...","textChars":362,"textLines":13,"bbox":[90,184,539,272]}
+{"kind":"textbox","id":"sh/98bul83e","slide":7,"text":"Luồng dữ liệu","textPreview":"Luồng dữ liệu","textChars":13,"textLines":1,"bbox":[710,172,300,28]}
+{"kind":"shape","id":"sh/87ids32t","slide":7,"bbox":[710,235,108,82]}
+{"kind":"textbox","id":"sh/qh0zahkr","slide":7,"text":"(B, 30, 1)","textPreview":"(B, 30, 1)","textChars":10,"textLines":1,"bbox":[715,257,98,40]}
+{"kind":"shape","id":"sh/ri90321c","slide":7,"bbox":[819,275,17,2]}
+{"kind":"shape","id":"sh/sjihc72x","slide":7,"bbox":[836,235,108,82]}
+{"kind":"textbox","id":"sh/dkri5cji","slide":7,"text":"RNN\nhidden=32","textPreview":"RNN | hidden=32","textChars":13,"textLines":2,"bbox":[841,257,98,40]}
+{"kind":"shape","id":"sh/itgz6xkv","slide":7,"bbox":[945,275,17,2]}
+{"kind":"shape","id":"sh/jep0z21g","slide":7,"bbox":[962,235,108,82]}
+{"kind":"textbox","id":"sh/4fyh8721","slide":7,"text":"last hidden","textPreview":"last hidden","textChars":11,"textLines":1,"bbox":[967,257,98,40]}
+{"kind":"shape","id":"sh/5gri1cj6","slide":7,"bbox":[1071,275,17,2]}
+{"kind":"shape","id":"sh/2pkji10z","slide":7,"bbox":[1088,235,108,82]}
+{"kind":"textbox","id":"sh/nat0bm1k","slide":7,"text":"Linear\n32 → 1","textPreview":"Linear | 32 → 1","textChars":13,"textLines":2,"bbox":[1093,257,98,40]}
+{"kind":"shape","id":"sh/zi1onud0","slide":7,"bbox":[710,355,470,78]}
+{"kind":"textbox","id":"sh/yhsnepwf","slide":7,"text":"prediction → loss → backward() → optimizer.step()","textPreview":"prediction → loss → backward() → optimizer.step()","textChars":49,"textLines":1,"bbox":[735,382,420,28]}
+{"kind":"image","id":"im/at4vehcf","slide":7,"name":"","geometry":"roundRect","alt":"Training and validation loss from the executed notebook","bbox":[710,470,470,160]}
+{"kind":"notes","id":"nt/2k2fxg","slide":7,"text":"Không đi sâu vào W, U, V hoặc vanishing gradient vì đó là phần kiến trúc/training chung. Ở đây chỉ cần nối shape input với lớp RNN, output layer và quy trình loss.backward(). Nguồn API: https://pytorch.org/docs/stable/generated/torch.nn.RNN.html"}
+{"kind":"slide","id":"sl/ccjoto","slide":8,"title":"08","textShapes":8}
+{"kind":"shape","id":"sh/e5sza14v","slide":8,"bbox":[0,0,1280,10]}
+{"kind":"textbox","id":"sh/ls3ylgnm","slide":8,"text":"08","textPreview":"08","textChars":2,"textLines":1,"bbox":[72,35,52,30]}
+{"kind":"textbox","id":"sh/07uhcbm1","slide":8,"text":"Kết quả và phân tích","textPreview":"Kết quả và phân tích","textChars":20,"textLines":1,"bbox":[72,65,1050,58]}
+{"kind":"textbox","id":"sh/nul0n65c","slide":8,"text":"RNN chưa vượt baseline: nguyên nhân nằm ở phân phối dữ liệu, không phải lỗi chạy code.","textPreview":"RNN chưa vượt baseline: nguyên nhân nằm ở phân phối dữ liệu, không phải lỗi chạy code.","textChars":86,"textLines":1,"bbox":[74,116,1080,30]}
+{"kind":"textbox","id":"sh/mtcze147","slide":8,"text":"Tiền xử lý chuỗi cho RNN · PyTorch","textPreview":"Tiền xử lý chuỗi cho RNN · PyTorch","textChars":34,"textLines":1,"bbox":[72,684,500,18]}
+{"kind":"textbox","id":"sh/8vuhgbmx","slide":8,"text":"Bảng metrics trên tập test","textPreview":"Bảng metrics trên tập test","textChars":26,"textLines":1,"bbox":[72,135,330,22]}
+{"kind":"shape","id":"sh/3yhgbm58","slide":8,"bbox":[704,145,504,205]}
+{"kind":"textbox","id":"sh/2x8z2h4n","slide":8,"text":"Distribution shift","textPreview":"Distribution shift","textChars":18,"textLines":1,"bbox":[735,175,300,30]}
+{"kind":"textbox","id":"sh/87upgneh","slide":8,"text":"Train max: 850.00\nTest min: 1,049.40\n100% giá test > train max","textPreview":"Train max: 850.00 | Test min: 1,049.40 | 100% giá test > train max","textChars":62,"textLines":3,"bbox":[735,220,410,88]}
+{"kind":"shape","id":"sh/n6l87ixw","slide":8,"bbox":[72,615,1136,45]}
+{"kind":"textbox","id":"sh/wbe9kned","slide":8,"text":"Kết luận: preprocessing phải đi cùng phân tích phân phối; hướng cải thiện là log-return, cửa sổ gần đây hoặc GRU/LSTM.","textPreview":"Kết luận: preprocessing phải đi cùng phân tích phân phối; hướng cải thiện là log-return, cửa sổ gần đây hoặc GRU/LSTM.","textChars":118,"textLines":1,"bbox":[95,627,1090,22]}
+{"kind":"table","id":"tb/sn2xkfud","slide":8,"name":"","rows":3,"cols":5,"preview":"Mô hình | MAE | RMSE | MAPE | Direction","bbox":[72,160,590,175]}
+{"kind":"image","id":"im/e90vqloz","slide":8,"name":"","geometry":"roundRect","alt":"Actual versus prediction plot from the executed notebook","bbox":[72,365,590,220]}
+{"kind":"image","id":"im/1crel0nq","slide":8,"name":"","geometry":"roundRect","alt":"Residual analysis plot from the executed notebook","bbox":[704,365,504,220]}
+{"kind":"notes","id":"nt/ccjoto","slide":8,"text":"Đọc bảng trước, sau đó chỉ vào biểu đồ actual-prediction và residual. Kết quả được lấy trực tiếp từ notebook đã chạy. Không nói RNN tốt hơn baseline. Đây là ví dụ cho thấy distribution shift làm Simple RNN khó ngoại suy mức giá mới. Notebook: rnn_sequence_preprocessing_gold_price.ipynb"}
